@@ -1,5 +1,5 @@
 {
-  "id": "b76eb0a4-afd3-4443-9752-be3d3cfe6f8c",
+  "id": "d64a339b-64a8-4f93-b77d-d24399076041",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "userId": {
           "name": "userId",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -121,8 +121,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_post": {
-      "name": "coursefull_post",
+    "public.coursefull_course": {
+      "name": "coursefull_course",
       "schema": "",
       "columns": {
         "id": {
@@ -132,7 +132,7 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "coursefull_post_id_seq",
+            "name": "coursefull_course_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -142,17 +142,30 @@
             "cycle": false
           }
         },
+        "publicId": {
+          "name": "publicId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "semesterId": {
+          "name": "semesterId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
         },
-        "createdById": {
-          "name": "createdById",
-          "type": "varchar(255)",
+        "shortCode": {
+          "name": "shortCode",
+          "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -169,23 +182,8 @@
         }
       },
       "indexes": {
-        "created_by_idx": {
-          "name": "created_by_idx",
-          "columns": [
-            {
-              "expression": "createdById",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "name_idx": {
-          "name": "name_idx",
+        "course_name_idx": {
+          "name": "course_name_idx",
           "columns": [
             {
               "expression": "name",
@@ -201,12 +199,323 @@
         }
       },
       "foreignKeys": {
-        "coursefull_post_createdById_coursefull_user_id_fk": {
-          "name": "coursefull_post_createdById_coursefull_user_id_fk",
-          "tableFrom": "coursefull_post",
-          "tableTo": "coursefull_user",
+        "coursefull_course_semesterId_coursefull_semester_id_fk": {
+          "name": "coursefull_course_semesterId_coursefull_semester_id_fk",
+          "tableFrom": "coursefull_course",
+          "tableTo": "coursefull_semester",
           "columnsFrom": [
-            "createdById"
+            "semesterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.coursefull_deliverable": {
+      "name": "coursefull_deliverable",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "coursefull_deliverable_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight": {
+          "name": "weight",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startsAt": {
+          "name": "startsAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "deadline": {
+          "name": "deadline",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "deliverable_name_idx": {
+          "name": "deliverable_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "deliverable_deadline_idx": {
+          "name": "deliverable_deadline_idx",
+          "columns": [
+            {
+              "expression": "deadline",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "coursefull_deliverable_courseId_coursefull_course_id_fk": {
+          "name": "coursefull_deliverable_courseId_coursefull_course_id_fk",
+          "tableFrom": "coursefull_deliverable",
+          "tableTo": "coursefull_course",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.coursefull_school": {
+      "name": "coursefull_school",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "coursefull_school_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "school_name_idx": {
+          "name": "school_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.coursefull_semester": {
+      "name": "coursefull_semester",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "coursefull_semester_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "schoolId": {
+          "name": "schoolId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startsAt": {
+          "name": "startsAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "endsAt": {
+          "name": "endsAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "semester_name_idx": {
+          "name": "semester_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "coursefull_semester_schoolId_coursefull_school_id_fk": {
+          "name": "coursefull_semester_schoolId_coursefull_school_id_fk",
+          "tableFrom": "coursefull_semester",
+          "tableTo": "coursefull_school",
+          "columnsFrom": [
+            "schoolId"
           ],
           "columnsTo": [
             "id"
@@ -233,7 +542,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -288,9 +597,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
@@ -314,6 +624,18 @@
         "image": {
           "name": "image",
           "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courseCredits": {
+          "name": "courseCredits",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subscribed": {
+          "name": "subscribed",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false
         }
