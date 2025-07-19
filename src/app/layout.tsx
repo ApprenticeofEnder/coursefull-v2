@@ -1,8 +1,7 @@
-import "~/styles/globals.css";
-
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Atkinson_Hyperlegible } from "next/font/google";
 
+import "~/styles/globals.css";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
@@ -11,16 +10,17 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
+const atkinsonHyperlegible = Atkinson_Hyperlegible({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-sans",
 });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${atkinsonHyperlegible.variable}`}>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
