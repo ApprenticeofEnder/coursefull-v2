@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { Atkinson_Hyperlegible } from "next/font/google";
 
+import { ThemeProvider } from "~/components/theme-provider";
 import "~/styles/globals.css";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -20,9 +21,20 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${atkinsonHyperlegible.variable}`}>
+    <html
+      lang="en"
+      className={`${atkinsonHyperlegible.variable} bg-background text-foreground`}
+      suppressHydrationWarning
+    >
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
