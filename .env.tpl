@@ -21,5 +21,12 @@ AUTH_SECRET="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/auth/AUTH_SECRET"
 AUTH_DISCORD_ID="op://CourseFull/coursefull_v2_dev/auth/AUTH_DISCORD_ID"
 AUTH_DISCORD_SECRET="op://CourseFull/coursefull_v2_dev/auth/AUTH_DISCORD_SECRET"
 
+# Database
+DB_USERNAME="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/username"
+DB_PASSWORD="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/password"
+DB_PORT="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/port"
+DB_NAME="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/db_name"
+DB_HOST="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/host"
+
 # Drizzle
-DATABASE_URL="postgresql://{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/DATABASE_USERNAME }}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/DATABASE_PASSWORD }}@{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/DATABASE_HOST}}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/DATABASE_PORT }}/{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/DATABASE_NAME }}"
+DATABASE_URL="postgresql://{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/username }}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/password }}@{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/host }}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/port }}/{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/db_name }}"
