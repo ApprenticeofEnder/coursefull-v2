@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, primaryKey } from "drizzle-orm/pg-core";
+import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
 import { createTable } from "./common";
 import { users } from "./users";
@@ -31,5 +31,17 @@ export const usersInSchools = createTable(
       .references(() => schools.id)
       .notNull(),
   }),
-  (t) => [primaryKey({ columns: [t.userId, t.schoolId] })],
+  (t) => [
+    primaryKey({ columns: [t.userId, t.schoolId] }),
+    foreignKey({
+      columns: [t.userId],
+      foreignColumns: [users.id],
+      name: "user_in_school_user_fk",
+    }),
+    foreignKey({
+      columns: [t.schoolId],
+      foreignColumns: [schools.id],
+      name: "user_in_school_school_fk",
+    }),
+  ],
 );

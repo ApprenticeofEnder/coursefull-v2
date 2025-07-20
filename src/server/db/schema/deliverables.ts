@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, primaryKey } from "drizzle-orm/pg-core";
+import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
 import { createTable } from "./common";
 import { courses } from "./courses";
@@ -34,6 +34,11 @@ export const deliverables = createTable(
   (t) => [
     index("deliverable_name_idx").on(t.name),
     index("deliverable_deadline_idx").on(t.deadline),
+    foreignKey({
+      columns: [t.courseId],
+      foreignColumns: [courses.id],
+      name: "deliverable_course_fk",
+    }),
   ],
 );
 
@@ -53,5 +58,17 @@ export const studentDeliverables = createTable(
     complete: d.boolean(),
     notes: d.text(),
   }),
-  (t) => [primaryKey({ columns: [t.userId, t.deliverableId] })],
+  (t) => [
+    primaryKey({ columns: [t.userId, t.deliverableId] }),
+    foreignKey({
+      columns: [t.userId],
+      foreignColumns: [users.id],
+      name: "student_deliverable_user_fk",
+    }),
+    foreignKey({
+      columns: [t.deliverableId],
+      foreignColumns: [deliverables.id],
+      name: "student_deliverable_deliverable_fk",
+    }),
+  ],
 );

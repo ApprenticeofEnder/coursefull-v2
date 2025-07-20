@@ -15,6 +15,13 @@
       "when": 1753044593316,
       "tag": "0001_brief_triton",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753046072771,
+      "tag": "0002_yummy_bloodaxe",
+      "breakpoints": true
     }
   ]
 }

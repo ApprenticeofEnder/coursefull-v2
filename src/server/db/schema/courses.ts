@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, primaryKey } from "drizzle-orm/pg-core";
+import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
 import { createTable } from "./common";
 import { semesters } from "./semesters";
@@ -22,7 +22,14 @@ export const courses = createTable(
       .notNull(),
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
-  (t) => [index("course_name_idx").on(t.name)],
+  (t) => [
+    index("course_name_idx").on(t.name),
+    foreignKey({
+      columns: [t.semesterId],
+      foreignColumns: [semesters.id],
+      name: "course_semester_fk",
+    }),
+  ],
 );
 
 export const userCourses = createTable(
@@ -44,5 +51,17 @@ export const userCourses = createTable(
     deliverableGoal: d.real(),
     grade: d.real(),
   }),
-  (t) => [primaryKey({ columns: [t.userId, t.courseId] })],
+  (t) => [
+    primaryKey({ columns: [t.userId, t.courseId] }),
+    foreignKey({
+      columns: [t.userId],
+      foreignColumns: [users.id],
+      name: "user_course_user_fk",
+    }),
+    foreignKey({
+      columns: [t.courseId],
+      foreignColumns: [courses.id],
+      name: "user_course_course_fk",
+    }),
+  ],
 );

@@ -1,0 +1,11 @@
+ALTER TABLE "coursefull_course" ADD CONSTRAINT "course_semester_fk" FOREIGN KEY ("semesterId") REFERENCES "public"."coursefull_semester"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_course" ADD CONSTRAINT "user_course_user_fk" FOREIGN KEY ("userId") REFERENCES "public"."coursefull_user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_course" ADD CONSTRAINT "user_course_course_fk" FOREIGN KEY ("courseId") REFERENCES "public"."coursefull_course"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_deliverable" ADD CONSTRAINT "deliverable_course_fk" FOREIGN KEY ("courseId") REFERENCES "public"."coursefull_course"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_student_deliverable" ADD CONSTRAINT "student_deliverable_user_fk" FOREIGN KEY ("userId") REFERENCES "public"."coursefull_user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_student_deliverable" ADD CONSTRAINT "student_deliverable_deliverable_fk" FOREIGN KEY ("deliverableId") REFERENCES "public"."coursefull_deliverable"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_in_school" ADD CONSTRAINT "user_in_school_user_fk" FOREIGN KEY ("userId") REFERENCES "public"."coursefull_user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_in_school" ADD CONSTRAINT "user_in_school_school_fk" FOREIGN KEY ("schoolId") REFERENCES "public"."coursefull_school"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_semester" ADD CONSTRAINT "semester_school_fk" FOREIGN KEY ("schoolId") REFERENCES "public"."coursefull_school"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_semester" ADD CONSTRAINT "user_semester_user_fk" FOREIGN KEY ("userId") REFERENCES "public"."coursefull_user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "coursefull_user_semester" ADD CONSTRAINT "user_semester_semester_fk" FOREIGN KEY ("semesterId") REFERENCES "public"."coursefull_semester"("id") ON DELETE no action ON UPDATE no action;
