@@ -10,6 +10,8 @@ export const courses = createTable(
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     publicId: d.uuid().defaultRandom(),
+    createdBy: d.uuid().references(() => users.id),
+    public: d.boolean().default(false),
     semesterId: d
       .integer()
       .references(() => semesters.id)
@@ -28,6 +30,11 @@ export const courses = createTable(
       columns: [t.semesterId],
       foreignColumns: [semesters.id],
       name: "course_semester_fk",
+    }),
+    foreignKey({
+      columns: [t.createdBy],
+      foreignColumns: [users.id],
+      name: "course_created_by_fk",
     }),
   ],
 );

@@ -1,4 +1,5 @@
-import { drizzle } from "drizzle-orm/postgres-js";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import postgres from "postgres";
 
 import { env } from "~/env";
@@ -15,7 +16,11 @@ const globalForDb = globalThis as unknown as {
 
 // TODO: Switch to a connection pool
 
-const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+});
 
-export const db = drizzle(conn, { schema });
+// const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
+// if (env.NODE_ENV !== "production") globalForDb.conn = conn;
+
+export const db = drizzle({ client: pool, schema });

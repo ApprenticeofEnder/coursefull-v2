@@ -10,6 +10,8 @@ export const semesters = createTable(
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     publicId: d.uuid().defaultRandom(),
+    createdBy: d.uuid().references(() => users.id),
+    public: d.boolean().default(false),
     schoolId: d
       .integer()
       .references(() => schools.id)
@@ -21,7 +23,7 @@ export const semesters = createTable(
       .notNull(),
     endsAt: d
       .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+      .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 DAY'`)
       .notNull(),
     createdAt: d
       .timestamp({ withTimezone: true })
@@ -35,6 +37,11 @@ export const semesters = createTable(
       columns: [t.schoolId],
       foreignColumns: [schools.id],
       name: "semester_school_fk",
+    }),
+    foreignKey({
+      columns: [t.createdBy],
+      foreignColumns: [users.id],
+      name: "semester_created_by_fk",
     }),
   ],
 );

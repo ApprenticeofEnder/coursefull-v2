@@ -10,6 +10,8 @@ export const deliverables = createTable(
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     publicId: d.uuid().defaultRandom(),
+    createdBy: d.uuid().references(() => users.id),
+    public: d.boolean().default(false),
     courseId: d
       .integer()
       .references(() => courses.id)
@@ -38,6 +40,11 @@ export const deliverables = createTable(
       columns: [t.courseId],
       foreignColumns: [courses.id],
       name: "deliverable_course_fk",
+    }),
+    foreignKey({
+      columns: [t.createdBy],
+      foreignColumns: [users.id],
+      name: "deliverable_created_by_fk",
     }),
   ],
 );
