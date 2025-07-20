@@ -7,9 +7,13 @@
  * need to use are documented accordingly near the end.
  */
 import { TRPCError, initTRPC } from "@trpc/server";
+import { getHTTPStatusCodeFromError } from "@trpc/server/http";
+import { privateDecrypt } from "crypto";
 import superjson from "superjson";
+import { v4 as uuidv4 } from "uuid";
 import { ZodError } from "zod";
 
+import { log } from "~/lib/logger";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
@@ -27,10 +31,17 @@ import { db } from "~/server/db";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
+  const requestId = uuidv4();
+
+  const logger = log.child().withPrefix("[TRPC]").withContext({
+    requestId,
+  });
 
   return {
     db,
     session,
+    logger,
+    requestId,
     ...opts,
   };
 };
@@ -44,8 +55,8 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
+  errorFormatter({ shape, error, ctx }) {
+    const errorData = {
       ...shape,
       data: {
         ...shape.data,
@@ -53,6 +64,14 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
           error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     };
+    const statusCode = getHTTPStatusCodeFromError(error);
+    const logger = ctx ? ctx.logger : log;
+    if (statusCode >= 500) {
+      logger.withMetadata(errorData).error("Severe unhandled error occurred.");
+    } else {
+      logger.withMetadata(errorData).warn("Request failed.");
+    }
+    return errorData;
   },
 });
 
@@ -83,7 +102,7 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ next, path }) => {
+const timingMiddleware = t.middleware(async ({ next, path, ctx }) => {
   const start = Date.now();
 
   if (t._config.isDev) {
@@ -95,7 +114,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   const result = await next();
 
   const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+  ctx.logger.debug(`${path} took ${end - start}ms to execute`);
 
   return result;
 });
@@ -130,3 +149,19 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+/**
+ * Procedure factory to make procedures for a given module
+ */
+export const procedureFactory = (moduleName: string) => {
+  const moduleLoggerMiddleware = t.middleware(async ({ next, ctx }) => {
+    ctx.logger.withContext({ module: moduleName });
+    const result = await next();
+    return result;
+  });
+
+  return {
+    publicProcedure: publicProcedure.use(moduleLoggerMiddleware),
+    protectedProcedure: protectedProcedure.use(moduleLoggerMiddleware),
+  };
+};
