@@ -3,16 +3,16 @@ import type { DeliverableMark } from "~/lib/types";
 /**
  * Rounds a given numeric value to the provided precision.
  */
-function round(value: number, precision: number = 0) {
-  var multiplier = Math.pow(10, precision);
+function round(value: number, precision = 0) {
+  const multiplier = Math.pow(10, precision);
   return Math.round(value * multiplier) / multiplier;
 }
 
 export class GradeCalculator {
-  fullWeight: number = 100.0;
-  weightCompleted: number = 0.0;
-  pointsEarned: number = 0.0;
-  targetGrade: number = 0.0;
+  fullWeight = 100.0;
+  weightCompleted = 0.0;
+  pointsEarned = 0.0;
+  targetGrade = 0.0;
 
   constructor(target: number) {
     this.targetGrade = target;
@@ -24,7 +24,9 @@ export class GradeCalculator {
   }
 
   addMarks(marks: DeliverableMark[]): void {
-    marks.forEach(this.addMark);
+    marks.forEach((mark) => {
+      this.addMark(mark);
+    });
   }
 
   isComplete(): boolean {

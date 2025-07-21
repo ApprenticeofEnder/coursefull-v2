@@ -8,7 +8,6 @@
  */
 import { TRPCError, initTRPC } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
-import { privateDecrypt } from "crypto";
 import superjson from "superjson";
 import { v4 as uuidv4 } from "uuid";
 import { ZodError } from "zod";

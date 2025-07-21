@@ -24,4 +24,10 @@ export const log = new LogLayer({
   transport: new PinoTransport({
     logger: pinoSetup,
   }),
+  plugins: [
+    redactionPlugin({
+      paths: ["password"],
+      censor: "[REDACTED]",
+    }),
+  ],
 });
