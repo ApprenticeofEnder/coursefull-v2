@@ -85,5 +85,13 @@ export const courseRouter = createTRPCRouter({
       });
     }),
 
+  generateDeliverables: protectedProcedure
+    .input(z.object({}))
+    .mutation(async ({ ctx, input }) => {
+      // This might work best with an async task queue
+      // TODO: Look into integrating Bull and some kind of Redis cache
+      // Might also be useful for DB caching
+    }),
+
   // TODO: Add delete functionality
 });
