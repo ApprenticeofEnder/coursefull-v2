@@ -45,7 +45,7 @@ const pinoTransports: DestinationStream = pino.transport<
       },
     },
   ],
-});
+}) as DestinationStream;
 
 export const log = new LogLayer({
   transport: new PinoTransport({

@@ -16,8 +16,8 @@ export const courses = createTable(
       .integer()
       .references(() => semesters.id)
       .notNull(),
-    name: d.varchar({ length: 256 }),
-    shortCode: d.varchar({ length: 32 }),
+    name: d.varchar({ length: 256 }).notNull(),
+    shortCode: d.varchar({ length: 32 }).notNull(),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
