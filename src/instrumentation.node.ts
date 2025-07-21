@@ -16,21 +16,23 @@ const sdk = new NodeSDK({
     [ATTR_SERVICE_NAME]: "CourseFull",
     [ATTR_SERVICE_VERSION]: "2.0.0",
   }),
-  spanProcessor: new SimpleSpanProcessor(new OTLPTraceExporter({})),
+  spanProcessor: new SimpleSpanProcessor(new OTLPTraceExporter()),
   instrumentations: [
-    new PinoInstrumentation({ disableLogSending: false }),
+    new PinoInstrumentation({ disableLogSending: true }),
     new UndiciInstrumentation({}),
   ],
 });
 
-process.on("SIGTERM", () =>
+process.on("SIGTERM", () => {
   sdk
     .shutdown()
     .then(
       () => log.info("OTEL SDK shut down successfully."),
-      (err) => log.error("Error shutting down OTEL SDK", err),
+      (err) => log.withError(err).error("Error shutting down OTEL SDK"),
     )
-    .finally(() => process.exit(0)),
-);
+    .finally(() => process.exit(0));
+});
 
 sdk.start();
+
+log.warn("OTEL SDK started.");
