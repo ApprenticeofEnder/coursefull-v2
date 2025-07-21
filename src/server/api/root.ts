@@ -4,6 +4,8 @@ import { semesterRouter } from "~/server/api/routers/semester";
 import { userRouter } from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
+import { deliverableRouter } from "./routers/deliverable";
+
 /**
  * This is the primary router for your server.
  *
@@ -11,6 +13,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   course: courseRouter,
+  deliverable: deliverableRouter,
   school: schoolRouter,
   semester: semesterRouter,
   user: userRouter,

@@ -73,7 +73,7 @@ export const courseRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         shortCode: z.string(),
-        semesterId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        courseId: z.number(),
         public: z.boolean(),
         goal: z.number().gt(0).lte(100),
       }),
