@@ -9,7 +9,7 @@ import {
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
 
-import { log } from "~/lib/logger";
+import { getLogger } from "~/lib/logger";
 
 const sdk = new NodeSDK({
   resource: resourceFromAttributes({
@@ -17,22 +17,20 @@ const sdk = new NodeSDK({
     [ATTR_SERVICE_VERSION]: "2.0.0",
   }),
   spanProcessor: new SimpleSpanProcessor(new OTLPTraceExporter()),
-  instrumentations: [
-    new PinoInstrumentation({ disableLogSending: true }),
-    new UndiciInstrumentation({}),
-  ],
+  instrumentations: [new UndiciInstrumentation({})],
 });
 
 process.on("SIGTERM", () => {
   sdk
     .shutdown()
     .then(
-      () => log.info("OTEL SDK shut down successfully."),
-      (err) => log.withError(err).error("Error shutting down OTEL SDK"),
+      () => logger.info("OTEL SDK shut down successfully."),
+      (err) => logger.withError(err).error("Error shutting down OTEL SDK"),
     )
     .finally(() => process.exit(0));
 });
 
 sdk.start();
 
-log.warn("OTEL SDK started.");
+const logger = getLogger();
+logger.info("OTEL SDK started.");

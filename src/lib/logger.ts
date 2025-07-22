@@ -1,60 +1,62 @@
+import { openTelemetryPlugin } from "@loglayer/plugin-opentelemetry";
 import { redactionPlugin } from "@loglayer/plugin-redaction";
+import { OpenTelemetryTransport } from "@loglayer/transport-opentelemetry";
 import { PinoTransport } from "@loglayer/transport-pino";
-import { LogLayer } from "loglayer";
-import { type DestinationStream, type TransportMultiOptions, pino } from "pino";
-import { type Options as OtelOptions } from "pino-opentelemetry-transport";
-import { type PrettyOptions } from "pino-pretty";
+import { type ILogLayer, LogLayer } from "loglayer";
+import { pino } from "pino";
+import { serializeError } from "serialize-error";
 
 import { env } from "~/env";
+import { asyncLocalStorage } from "~/lib/async-local-storage";
 
-// Get the directory of the current module for resolving worker paths
-const pinoTransports: DestinationStream = pino.transport<
-  OtelOptions | PrettyOptions
->({
-  targets: [
-    {
-      level: "debug",
-      target: "pino-opentelemetry-transport",
-      options: {
-        logRecordProcessorOptions: [
-          {
-            recordProcessorType: "batch",
-            exporterOptions: { protocol: "http" },
+export function createLogger() {
+  return new LogLayer({
+    errorSerializer: serializeError,
+    transport: [
+      new OpenTelemetryTransport({
+        onError: (error) =>
+          console.error("OpenTelemetry logging error:", error),
+        enabled: env.NODE_ENV !== "test",
+      }),
+      new PinoTransport({
+        logger: pino({
+          level: "trace",
+          transport: {
+            target: "pino/file",
+            options: { destination: "logs/coursefull.log", mkdir: true },
           },
-        ],
-        loggerName: "CourseFull",
-        serviceVersion: "2.0.0",
-        resourceAttributes: {
-          "service.name": "CourseFull",
-        },
-      },
-    },
-    {
-      level: env.NODE_ENV === "production" ? "info" : "debug",
-      target: "pino-pretty",
-      options: {
-        colorize: true,
-      },
-    },
-    {
-      level: "trace",
-      target: "pino/file",
-      options: {
-        destination: "logs/coursefull.log",
-        mkdir: true,
-      },
-    },
-  ],
-}) as DestinationStream;
+        }),
+      }),
+      new PinoTransport({
+        logger: pino({
+          level: "debug",
+          enabled: env.NODE_ENV === "development",
+          transport: {
+            target: "pino-pretty",
+            options: {
+              colorize: true,
+            },
+          },
+        }),
+      }),
+    ],
+    plugins: [
+      redactionPlugin({
+        paths: ["password"],
+        censor: "[REDACTED]",
+      }),
+      openTelemetryPlugin(),
+    ],
+  });
+}
 
-export const log = new LogLayer({
-  transport: new PinoTransport({
-    logger: pino(pinoTransports),
-  }),
-  plugins: [
-    redactionPlugin({
-      paths: ["password"],
-      censor: "[REDACTED]",
-    }),
-  ],
-});
+const defaultLogger = createLogger();
+
+export function getLogger(): ILogLayer {
+  const store = asyncLocalStorage.getStore();
+  if (!store) {
+    return defaultLogger;
+  }
+
+  return store.logger;
+}

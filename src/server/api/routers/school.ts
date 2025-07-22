@@ -2,6 +2,7 @@ import { asc } from "drizzle-orm";
 import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
+import { getLogger } from "~/lib/logger";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { schools } from "~/server/db/schema";
 
@@ -25,6 +26,18 @@ export const schoolRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.select().from(schools).orderBy(asc(schools.name));
+    const logger = getLogger();
+    const result = await ctx.db
+      .select()
+      .from(schools)
+      .orderBy(asc(schools.name));
+    logger.withMetadata({ result }).debug("Schools retrieved.");
+    return result;
+  }),
+
+  ping: publicProcedure.input(z.object({})).query(async ({ ctx }) => {
+    const logger = getLogger();
+    logger.info("Ping");
+    return {};
   }),
 });

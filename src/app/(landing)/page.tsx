@@ -9,6 +9,12 @@ export default async function Home() {
   return (
     <HydrateClient>
       <div>Welcome to CourseFull!</div>
+      <div>
+        <Link href="/schools">Schools</Link>
+      </div>
+      <div>
+        <Link href="/semesters">Semesters</Link>
+      </div>
     </HydrateClient>
   );
 }

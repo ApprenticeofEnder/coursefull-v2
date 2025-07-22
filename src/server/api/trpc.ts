@@ -12,7 +12,8 @@ import superjson from "superjson";
 import { v4 as uuidv4 } from "uuid";
 import { ZodError } from "zod";
 
-import { log } from "~/lib/logger";
+import { asyncLocalStorage } from "~/lib/async-local-storage";
+import { getLogger } from "~/lib/logger";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
@@ -32,7 +33,8 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
   const requestId = uuidv4();
 
-  const logger = log.child().withPrefix("[TRPC]").withContext({
+  const logger = getLogger().withPrefix("[TRPC]");
+  logger.withContext({
     requestId,
   });
 
@@ -59,16 +61,15 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError: error.cause instanceof ZodError ? error.cause : null,
       },
     };
     const statusCode = getHTTPStatusCodeFromError(error);
-    const logger = ctx ? ctx.logger : log;
+    const logger = ctx ? ctx.logger : getLogger();
     if (statusCode >= 500) {
-      logger.withMetadata(errorData).error("Severe unhandled error occurred.");
+      logger.withError(error).error("Severe unhandled error occurred.");
     } else {
-      logger.withMetadata(errorData).warn("Request failed.");
+      logger.withError(error).warn("Request failed.");
     }
     return errorData;
   },
@@ -101,7 +102,8 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ next, path, ctx }) => {
+const timingMiddleware = t.middleware(async ({ next, path }) => {
+  const logger = getLogger();
   const start = Date.now();
 
   if (t._config.isDev) {
@@ -113,9 +115,16 @@ const timingMiddleware = t.middleware(async ({ next, path, ctx }) => {
   const result = await next();
 
   const end = Date.now();
-  ctx.logger.debug(`${path} took ${end - start}ms to execute`);
+  logger.trace(`${path} took ${end - start}ms to execute`);
 
   return result;
+});
+
+/**
+ * Middleware for saving the logger to async storage
+ */
+const loggingMiddleware = t.middleware(async ({ next, ctx }) => {
+  return asyncLocalStorage.run({ logger: ctx.logger }, next);
 });
 
 /**
@@ -125,7 +134,9 @@ const timingMiddleware = t.middleware(async ({ next, path, ctx }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure
+  .use(loggingMiddleware)
+  .use(timingMiddleware);
 
 /**
  * Protected (authenticated) procedure
@@ -136,6 +147,7 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure
+  .use(loggingMiddleware)
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session?.user) {
@@ -153,9 +165,11 @@ export const protectedProcedure = t.procedure
  * Procedure factory to make procedures for a given module
  */
 export const procedureFactory = (moduleName: string) => {
-  const moduleLoggerMiddleware = t.middleware(async ({ next, ctx }) => {
-    ctx.logger.withContext({ module: moduleName });
+  const moduleLoggerMiddleware = t.middleware(async ({ next }) => {
+    const logger = getLogger();
+    logger.withContext({ module: moduleName });
     const result = await next();
+    logger.clearContext();
     return result;
   });
 

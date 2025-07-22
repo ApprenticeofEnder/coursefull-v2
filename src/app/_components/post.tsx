@@ -1,5 +1,6 @@
 "use client";
 
+// WARNING: THIS COMPONENT IS SUPER MEGA DEPRECATED AND ONLY USED AS A REFERENCE
 import { useState } from "react";
 
 // import { api } from "~/trpc/react";
