@@ -79,3 +79,8 @@ export const studentDeliverables = createTable(
     }),
   ],
 );
+
+export type Deliverable = typeof deliverables.$inferSelect;
+export type NewDeliverable = typeof deliverables.$inferInsert;
+export type StudentDeliverable = typeof studentDeliverables.$inferSelect;
+export type NewStudentDeliverable = typeof studentDeliverables.$inferInsert;

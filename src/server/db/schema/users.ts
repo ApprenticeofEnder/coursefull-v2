@@ -7,6 +7,7 @@ import { createTable } from "./common";
 export const users = createTable("user", (d) => ({
   id: d.uuid().defaultRandom().primaryKey(),
   name: d.varchar({ length: 255 }),
+  // Shouldn't this be unique?
   email: d.varchar({ length: 255 }).notNull(),
   emailVerified: d
     .timestamp({

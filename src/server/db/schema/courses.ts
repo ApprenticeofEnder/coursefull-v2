@@ -72,3 +72,8 @@ export const userCourses = createTable(
     }),
   ],
 );
+
+export type Course = typeof courses.$inferSelect;
+export type NewCourse = typeof courses.$inferInsert;
+export type UserCourse = typeof userCourses.$inferSelect;
+export type NewUserCourse = typeof userCourses.$inferInsert;

@@ -30,3 +30,8 @@ DB_HOST="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/host"
 
 # Drizzle
 DATABASE_URL="postgresql://{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/username }}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/password }}@{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/host }}:{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/port }}/{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/db_name }}"
+
+# Data 
+UNIVERSITY_DATA_FILE="data/world_universities_and_domains.json"
+
+# Observability

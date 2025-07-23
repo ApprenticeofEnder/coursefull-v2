@@ -78,3 +78,8 @@ export const userSemesters = createTable(
     }),
   ],
 );
+
+export type Semester = typeof semesters.$inferSelect;
+export type NewSemester = typeof semesters.$inferInsert;
+export type UserSemester = typeof userSemesters.$inferSelect;
+export type NewUserSemester = typeof userSemesters.$inferInsert;

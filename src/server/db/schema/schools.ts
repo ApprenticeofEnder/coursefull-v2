@@ -9,7 +9,14 @@ export const schools = createTable(
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     publicId: d.uuid().defaultRandom(),
-    name: d.varchar({ length: 256 }).notNull(),
+    name: d.varchar({ length: 256 }).notNull().unique(),
+    alphaTwoCode: d.varchar({ length: 4 }).notNull().default("N/A"),
+    country: d.varchar({ length: 256 }).notNull().default("N/A"),
+    stateOrProvince: d.varchar({ length: 256 }),
+    // This just lets us know whether we can load in semester data automatically.
+    hasAutoload: d.boolean().default(false),
+    domains: d.json().$type<string[]>().default([]),
+    webPages: d.json().$type<string[]>().default([]),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -45,3 +52,8 @@ export const usersInSchools = createTable(
     }),
   ],
 );
+
+export type School = typeof schools.$inferSelect;
+export type NewSchool = typeof schools.$inferInsert;
+export type UserInSchool = typeof usersInSchools.$inferSelect;
+export type NewUserInSchool = typeof usersInSchools.$inferInsert;
