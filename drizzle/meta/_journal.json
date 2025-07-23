@@ -57,6 +57,13 @@
       "when": 1753303094559,
       "tag": "0007_spotty_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1753313630218,
+      "tag": "0008_eager_grandmaster",
+      "breakpoints": true
     }
   ]
 }

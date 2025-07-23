@@ -1,6 +1,6 @@
+import { type AdapterAccountType } from "@auth/core/adapters";
 import { sql } from "drizzle-orm";
 import { index, primaryKey } from "drizzle-orm/pg-core";
-import { type AdapterAccount } from "next-auth/adapters";
 
 import { createTable } from "./common";
 
@@ -27,7 +27,7 @@ export const accounts = createTable(
       .uuid()
       .references(() => users.id)
       .notNull(),
-    type: d.varchar({ length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+    type: d.varchar({ length: 255 }).$type<AdapterAccountType>().notNull(),
     provider: d.varchar({ length: 255 }).notNull(),
     providerAccountId: d.varchar({ length: 255 }).notNull(),
     refresh_token: d.text(),

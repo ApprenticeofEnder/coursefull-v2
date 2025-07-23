@@ -8,20 +8,25 @@ export const schools = createTable(
   "school",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid().defaultRandom(),
+    publicId: d.uuid("public_id").defaultRandom(),
     name: d.varchar({ length: 256 }).notNull().unique(),
-    alphaTwoCode: d.varchar({ length: 4 }).notNull().default("N/A"),
+    alphaTwoCode: d
+      .varchar("alpha_two_code", { length: 4 })
+      .notNull()
+      .default("N/A"),
     country: d.varchar({ length: 256 }).notNull().default("N/A"),
-    stateOrProvince: d.varchar({ length: 256 }),
+    stateOrProvince: d.varchar("state_or_province", { length: 256 }),
     // This just lets us know whether we can load in semester data automatically.
-    hasAutoload: d.boolean().default(false),
+    hasAutoload: d.boolean("has_autoload").default(false),
     domains: d.json().$type<string[]>().default([]),
-    webPages: d.json().$type<string[]>().default([]),
+    webPages: d.json("web_pages").$type<string[]>().default([]),
     createdAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
   }),
   (t) => [index("school_name_idx").on(t.name)],
 );
@@ -30,11 +35,11 @@ export const usersInSchools = createTable(
   "user_in_school",
   (d) => ({
     userId: d
-      .uuid()
+      .uuid("user_id")
       .references(() => users.id)
       .notNull(),
     schoolId: d
-      .integer()
+      .integer("school_id")
       .references(() => schools.id)
       .notNull(),
   }),

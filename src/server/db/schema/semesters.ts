@@ -9,27 +9,29 @@ export const semesters = createTable(
   "semester",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid().defaultRandom(),
-    createdBy: d.uuid().references(() => users.id),
+    publicId: d.uuid("public_id").defaultRandom(),
+    createdBy: d.uuid("created_by").references(() => users.id),
     public: d.boolean().default(false),
     schoolId: d
-      .integer()
+      .integer("school_id")
       .references(() => schools.id)
       .notNull(),
     name: d.varchar({ length: 256 }),
     startsAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("starts_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     endsAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("ends_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 DAY'`)
       .notNull(),
     createdAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
   }),
   (t) => [
     index("semester_name_idx").on(t.name),
@@ -50,11 +52,11 @@ export const userSemesters = createTable(
   "user_semester",
   (d) => ({
     userId: d
-      .uuid()
+      .uuid("user_id")
       .references(() => users.id)
       .notNull(),
     semesterId: d
-      .integer()
+      .integer("semester_id")
       .references(() => semesters.id)
       .notNull(),
     role: d.varchar({ length: 32 }),

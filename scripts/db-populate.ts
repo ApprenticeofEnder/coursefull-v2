@@ -44,3 +44,7 @@ async function loadUniversities() {
     logger.withError(error).error("Unexpected error occurred.");
   }
 }
+
+loadUniversities().then(() => {
+  process.exit(0);
+});

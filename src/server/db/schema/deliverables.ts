@@ -9,29 +9,31 @@ export const deliverables = createTable(
   "deliverable",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid().defaultRandom(),
-    createdBy: d.uuid().references(() => users.id),
+    publicId: d.uuid("public_id").defaultRandom(),
+    createdBy: d.uuid("created_by").references(() => users.id),
     public: d.boolean().default(false),
     courseId: d
-      .integer()
+      .integer("course_id")
       .references(() => courses.id)
       .notNull(),
     name: d.varchar({ length: 256 }),
     weight: d.real(),
     type: d.varchar({ length: 256 }), // TODO: see if this can't be converted to a postgres enum somehow
     startsAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("starts_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     deadline: d
-      .timestamp({ withTimezone: true })
+      .timestamp("deadline", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 DAY'`)
       .notNull(),
     createdAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
   }),
   (t) => [
     index("deliverable_name_idx").on(t.name),
@@ -53,11 +55,11 @@ export const studentDeliverables = createTable(
   "student_deliverable",
   (d) => ({
     userId: d
-      .uuid()
+      .uuid("user_id")
       .references(() => users.id)
       .notNull(),
     deliverableId: d
-      .integer()
+      .integer("deliverable_id")
       .references(() => deliverables.id)
       .notNull(),
     goal: d.real(),

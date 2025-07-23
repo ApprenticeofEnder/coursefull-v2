@@ -9,20 +9,22 @@ export const courses = createTable(
   "course",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid().defaultRandom(),
-    createdBy: d.uuid().references(() => users.id),
+    publicId: d.uuid("public_id").defaultRandom(),
+    createdBy: d.uuid("created_by").references(() => users.id),
     public: d.boolean().default(false),
     semesterId: d
-      .integer()
+      .integer("semester_id")
       .references(() => semesters.id)
       .notNull(),
     name: d.varchar({ length: 256 }).notNull(),
-    shortCode: d.varchar({ length: 32 }).notNull(),
+    shortCode: d.varchar("short_code", { length: 32 }).notNull(),
     createdAt: d
-      .timestamp({ withTimezone: true })
+      .timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
   }),
   (t) => [
     index("course_name_idx").on(t.name),
@@ -43,11 +45,11 @@ export const userCourses = createTable(
   "user_course",
   (d) => ({
     userId: d
-      .uuid()
+      .uuid("user_id")
       .references(() => users.id)
       .notNull(),
     courseId: d
-      .integer()
+      .integer("course_id")
       .references(() => courses.id)
       .notNull(),
     role: d.varchar({ length: 32 }),
@@ -55,7 +57,7 @@ export const userCourses = createTable(
     // For a prof or TA, the goal might be for the whole class/semester
     // For a student, the goal might be personal
     goal: d.real(),
-    deliverableGoal: d.real(),
+    deliverableGoal: d.real("deliverable_goal"),
     grade: d.real(),
   }),
   (t) => [

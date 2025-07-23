@@ -18,9 +18,10 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "dev:populate": "tsx scripts/db-populate.ts"
+    "dev:populate": "tsx --env-file=.env scripts/db-populate.ts"
   },
   "dependencies": {
+    "@auth/core": "^0.40.0",
     "@auth/drizzle-adapter": "^1.7.2",
     "@hookform/resolvers": "^5.1.1",
     "@loglayer/plugin-opentelemetry": "^2.1.1",
