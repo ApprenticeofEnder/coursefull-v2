@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getPaginationOffset } from "~/lib/common";
 import { getLogger } from "~/lib/logger";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
+import { withPagination } from "~/server/db";
 import { schools } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("schools");
@@ -20,7 +21,8 @@ export const schoolRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       // TODO: Work out pagination, see if there's a way of retrieving the number of remaining pages
-      return await ctx.db
+
+      const baseQuery = ctx.db
         .select()
         .from(schools)
         .where(
@@ -31,9 +33,20 @@ export const schoolRouter = createTRPCRouter({
               : undefined,
           ),
         )
-        .orderBy(asc(schools.name))
-        .limit(input.limit)
-        .offset(getPaginationOffset(input.page, input.limit));
+        .orderBy(asc(schools.name));
+      const allSchools = await baseQuery;
+      const paginatedQuery = withPagination(
+        baseQuery.$dynamic(),
+        input.page,
+        input.limit,
+      );
+      const schoolPage = await paginatedQuery;
+      const pages = Math.ceil(allSchools.length / input.limit);
+      const result = {
+        schools: schoolPage,
+        pages,
+      };
+      return result;
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {

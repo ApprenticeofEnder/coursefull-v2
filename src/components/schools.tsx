@@ -62,11 +62,14 @@ export function SchoolSearch() {
       name: "",
     },
   });
-  const [schools, schoolQuery] = api.school.search.useSuspenseQuery(
+  const [{ schools, pages }, schoolQuery] = api.school.search.useSuspenseQuery(
     form.getValues(),
   );
 
   function onSubmit() {
+    if (form.getFieldState("name").isDirty) {
+      form.setValue("page", 1);
+    }
     void schoolQuery.refetch();
   }
 
@@ -143,33 +146,51 @@ export function SchoolSearch() {
               )}
             />
           </div>
-          <div className="flex gap-2">
-            <FormField
-              control={form.control}
-              name="page"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Page</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1"
-                      onChange={(e) => {
-                        const parsed = parseInt(e.target.value, 10);
-                        field.onChange(parsed);
-                      }}
-                      defaultValue={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage></FormMessage>
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button type="submit">Search</Button>
+          <Button type="submit" disabled={schoolQuery.isFetching}>
+            Search
+          </Button>
+          <SchoolList schools={schools}></SchoolList>
+          <FormField
+            control={form.control}
+            name="page"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Pagination>
+                    <PaginationContent>
+                      {field.value > 1 && (
+                        <PaginationItem>
+                          <PaginationPrevious
+                            onClick={() => {
+                              field.onChange(field.value - 1);
+                              void schoolQuery.refetch();
+                              window.scrollTo({ top: 0 });
+                            }}
+                          />
+                        </PaginationItem>
+                      )}
+                      <PaginationItem>
+                        <PaginationLink>{field.value}</PaginationLink>
+                      </PaginationItem>
+                      {field.value < pages && (
+                        <PaginationItem>
+                          <PaginationNext
+                            onClick={() => {
+                              field.onChange(field.value + 1);
+                              void schoolQuery.refetch();
+                              window.scrollTo({ top: 0 });
+                            }}
+                          />
+                        </PaginationItem>
+                      )}
+                    </PaginationContent>
+                  </Pagination>
+                </FormControl>
+              </FormItem>
+            )}
+          />
         </form>
       </Form>
-      <SchoolList schools={schools}></SchoolList>
     </div>
   );
 }
