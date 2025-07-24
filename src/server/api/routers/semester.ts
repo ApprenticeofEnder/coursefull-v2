@@ -8,6 +8,18 @@ import { semesters, userSemesters } from "~/server/db/schema";
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
 export const semesterRouter = createTRPCRouter({
+  search: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().gte(10).catch(25),
+        page: z.number().gte(1).catch(1),
+        schoolId: z.number().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.select().from(semesters);
+    }),
+
   getPage: publicProcedure
     .input(
       z.object({
