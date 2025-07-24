@@ -210,6 +210,7 @@ export function SchoolList({ schools }: { schools: School[] | undefined }) {
 }
 
 export function SchoolCard({ name, country, stateOrProvince }: School) {
+  // TODO: Add button to enroll the user in the school
   return (
     <Card>
       <CardHeader>

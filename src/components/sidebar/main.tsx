@@ -19,6 +19,7 @@ type SidebarProps = React.ComponentProps<typeof Sidebar> & {
 };
 
 export function AppSidebar({ ...props }: SidebarProps) {
+  // TODO: Get a list of schools the user is enrolled in on initial load
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

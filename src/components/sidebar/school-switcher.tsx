@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+import { useSchoolStore } from "~/lib/stores";
 import type { School } from "~/server/db/schema";
 
 interface SchoolSwitcherProps {
@@ -24,10 +25,14 @@ interface SchoolSwitcherProps {
 
 export function SchoolSwitcher({ schools }: SchoolSwitcherProps) {
   const { isMobile } = useSidebar();
-  const [activeSchool, setActiveSchool] = React.useState(schools[0]);
-  if (!activeSchool) {
+  const schoolStore = useSchoolStore();
+
+  schoolStore.addSchool(schools[0]);
+  if (!schoolStore.getActiveSchool()) {
     return null;
   }
+
+  // TODO: Add corresponding methods in the school card
 
   return (
     <SidebarMenu>
@@ -43,7 +48,7 @@ export function SchoolSwitcher({ schools }: SchoolSwitcherProps) {
               </div> */}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {activeSchool.name}
+                  {schoolStore.getActiveSchool()?.name}
                 </span>
                 {/* <span className="truncate text-xs">{activeTeam.plan}</span> */}
               </div>
@@ -62,14 +67,14 @@ export function SchoolSwitcher({ schools }: SchoolSwitcherProps) {
             {schools.map((school, index) => (
               <DropdownMenuItem
                 key={school.name}
-                onClick={() => setActiveSchool(school)}
+                onClick={() => schoolStore.setActiveSchool(school.publicId)}
                 className="gap-2 p-2"
               >
                 {/* <div className="flex size-6 items-center justify-center rounded-md border"> */}
                 {/* <team.logo className="size-3.5 shrink-0" /> */}
                 {/* </div> */}
                 {school.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                {/* <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut> */}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

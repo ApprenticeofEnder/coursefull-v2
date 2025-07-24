@@ -17,3 +17,12 @@ services:
     ports:
       - "${DB_PORT}:5432"
     restart: unless-stopped
+  cache:
+    image: eqalpha/keydb
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "keydb-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
