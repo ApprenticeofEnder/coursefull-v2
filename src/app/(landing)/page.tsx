@@ -15,6 +15,11 @@ export default async function Home() {
       <div>
         <Link href="/semesters">Semesters</Link>
       </div>
+      <div>
+        <Link href={session ? "/api/auth/signout" : "/api/auth/signin"}>
+          {session ? "Sign out" : "Sign in"}
+        </Link>
+      </div>
     </HydrateClient>
   );
 }

@@ -19,6 +19,7 @@ export const schoolRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      // TODO: Work out pagination, see if there's a way of retrieving the number of remaining pages
       return await ctx.db
         .select()
         .from(schools)
