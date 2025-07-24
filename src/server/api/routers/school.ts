@@ -12,7 +12,7 @@ export const schoolRouter = createTRPCRouter({
   search: publicProcedure
     .input(
       z.object({
-        limit: z.number().gte(10).catch(25),
+        limit: z.number().gte(10).lte(100).catch(25),
         page: z.number().gte(1).catch(1),
         name: z.string().optional(),
         alphaTwoCode: z.string().optional(),

@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { log } from "~/lib/logger";
 import {
   createTRPCRouter,
   protectedProcedure,
