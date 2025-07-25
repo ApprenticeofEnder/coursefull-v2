@@ -1,1 +1,0 @@
-ALTER TABLE "coursefull_school" ALTER COLUMN "name" SET NOT NULL;

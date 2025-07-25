@@ -1,5 +1,4 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import { readFile } from "fs/promises";
 import { z } from "zod";
 
 export const env = createEnv({
@@ -15,6 +14,7 @@ export const env = createEnv({
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.url(),
+    CACHE_URL: z.url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -40,6 +40,7 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    CACHE_URL: process.env.CACHE_URL,
     UNIVERSITY_DATA_FILE: process.env.UNIVERSITY_DATA_FILE,
   },
   /**
@@ -52,4 +53,9 @@ export const env = createEnv({
    * `SOME_VAR=''` will throw an error.
    */
   emptyStringAsUndefined: true,
+
+  onValidationError: (issues) => {
+    console.error("Invalid environment variables:", issues);
+    throw new Error("Invalid environment variables.");
+  },
 });

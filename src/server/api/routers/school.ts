@@ -2,14 +2,24 @@ import { and, asc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
-import { getLogger } from "~/lib/logger";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { withPagination } from "~/server/db";
 import { schools } from "~/server/db/schema";
+import { getLogger } from "~/server/logger";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("schools");
 
 export const schoolRouter = createTRPCRouter({
+  enroll: protectedProcedure
+    .input(
+      z.object({
+        schoolId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const school = await ctx.db.query.schools.findFirst();
+    }),
+
   search: publicProcedure
     .input(
       z.object({

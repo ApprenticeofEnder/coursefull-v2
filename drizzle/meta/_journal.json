@@ -5,64 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1752809693864,
-      "tag": "0000_dazzling_shooting_star",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1753044593316,
-      "tag": "0001_brief_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1753046072771,
-      "tag": "0002_yummy_bloodaxe",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1753047728319,
-      "tag": "0003_powerful_luke_cage",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1753087786020,
-      "tag": "0004_stale_sugar_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1753132777901,
-      "tag": "0005_cute_norrin_radd",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1753301376353,
-      "tag": "0006_certain_unicorn",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1753303094559,
-      "tag": "0007_spotty_mastermind",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1753313630218,
-      "tag": "0008_eager_grandmaster",
+      "when": 1753480724200,
+      "tag": "0000_brainy_rocket_raccoon",
       "breakpoints": true
     }
   ]

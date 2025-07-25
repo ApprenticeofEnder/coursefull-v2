@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// import { log } from "~/lib/logger";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("posts");

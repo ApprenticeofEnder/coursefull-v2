@@ -1,3 +1,4 @@
+import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
@@ -8,7 +9,7 @@ export const schools = createTable(
   "school",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid("public_id").defaultRandom(),
+    publicId: d.text("public_id").$defaultFn(() => createId()),
     name: d.varchar({ length: 256 }).notNull().unique(),
     alphaTwoCode: d
       .varchar("alpha_two_code", { length: 4 })
@@ -35,7 +36,7 @@ export const usersInSchools = createTable(
   "user_in_school",
   (d) => ({
     userId: d
-      .uuid("user_id")
+      .text("user_id")
       .references(() => users.id)
       .notNull(),
     schoolId: d

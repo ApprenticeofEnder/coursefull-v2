@@ -1,3 +1,4 @@
+import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
@@ -9,8 +10,8 @@ export const courses = createTable(
   "course",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.uuid("public_id").defaultRandom(),
-    createdBy: d.uuid("created_by").references(() => users.id),
+    publicId: d.text("public_id").$defaultFn(() => createId()),
+    createdBy: d.text("created_by").references(() => users.id),
     public: d.boolean().default(false),
     semesterId: d
       .integer("semester_id")
@@ -45,7 +46,7 @@ export const userCourses = createTable(
   "user_course",
   (d) => ({
     userId: d
-      .uuid("user_id")
+      .text("user_id")
       .references(() => users.id)
       .notNull(),
     courseId: d

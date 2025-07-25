@@ -1,5 +1,4 @@
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
 import { UndiciInstrumentation } from "@opentelemetry/instrumentation-undici";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
@@ -9,7 +8,7 @@ import {
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
 
-import { getLogger } from "~/lib/logger";
+import { getLogger } from "~/server/logger";
 
 const sdk = new NodeSDK({
   resource: resourceFromAttributes({

@@ -21,6 +21,9 @@ AUTH_SECRET="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/auth/AUTH_SECRET"
 AUTH_DISCORD_ID="op://CourseFull/coursefull_v2_dev/auth/AUTH_DISCORD_ID"
 AUTH_DISCORD_SECRET="op://CourseFull/coursefull_v2_dev/auth/AUTH_DISCORD_SECRET"
 
+# Cache
+CACHE_URL="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/cache/url"
+
 # Database
 DB_USERNAME="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/username"
 DB_PASSWORD="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/database/password"

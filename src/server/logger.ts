@@ -6,7 +6,6 @@ import { type ILogLayer, LogLayer } from "loglayer";
 import { pino } from "pino";
 import { serializeError } from "serialize-error";
 
-import { env } from "~/env";
 import { asyncLocalStorage } from "~/lib/async-local-storage";
 
 export function createLogger() {
@@ -16,7 +15,7 @@ export function createLogger() {
       new OpenTelemetryTransport({
         onError: (error) =>
           console.error("OpenTelemetry logging error:", error),
-        enabled: env.NODE_ENV !== "test",
+        enabled: process.env.NODE_ENV !== "test",
       }),
       new PinoTransport({
         logger: pino({
@@ -30,7 +29,7 @@ export function createLogger() {
       new PinoTransport({
         logger: pino({
           level: "debug",
-          enabled: env.NODE_ENV === "development",
+          enabled: process.env.NODE_ENV === "development",
           transport: {
             target: "pino-pretty",
             options: {

@@ -1,22 +1,25 @@
 import { type AdapterAccountType } from "@auth/core/adapters";
+import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { index, primaryKey } from "drizzle-orm/pg-core";
 
 import { createTable } from "./common";
 
 export const users = createTable("user", (d) => ({
-  id: d.uuid().defaultRandom().primaryKey(),
+  id: d
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
   name: d.varchar({ length: 255 }),
-  // Shouldn't this be unique?
-  email: d.varchar({ length: 255 }).notNull(),
+  email: d.varchar({ length: 255 }).notNull().unique(),
   emailVerified: d
-    .timestamp({
+    .timestamp("email_verified", {
       mode: "date",
       withTimezone: true,
     })
     .default(sql`CURRENT_TIMESTAMP`),
   image: d.varchar({ length: 255 }),
-  courseCredits: d.integer(),
+  courseCredits: d.integer("course_credits"),
   subscribed: d.boolean(),
 }));
 
@@ -24,7 +27,7 @@ export const accounts = createTable(
   "account",
   (d) => ({
     userId: d
-      .uuid()
+      .text()
       .references(() => users.id)
       .notNull(),
     type: d.varchar({ length: 255 }).$type<AdapterAccountType>().notNull(),
@@ -49,7 +52,7 @@ export const sessions = createTable(
   (d) => ({
     sessionToken: d.varchar({ length: 255 }).notNull().primaryKey(),
     userId: d
-      .uuid()
+      .text()
       .references(() => users.id)
       .notNull(),
     expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),

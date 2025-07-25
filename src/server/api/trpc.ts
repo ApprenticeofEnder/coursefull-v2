@@ -13,9 +13,9 @@ import { v4 as uuidv4 } from "uuid";
 import { ZodError } from "zod";
 
 import { asyncLocalStorage } from "~/lib/async-local-storage";
-import { getLogger } from "~/lib/logger";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { getLogger } from "~/server/logger";
 
 /**
  * 1. CONTEXT

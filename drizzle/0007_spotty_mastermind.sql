@@ -1,1 +1,0 @@
-ALTER TABLE "coursefull_school" ADD CONSTRAINT "coursefull_school_name_unique" UNIQUE("name");
