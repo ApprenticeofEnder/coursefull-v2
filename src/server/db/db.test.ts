@@ -1,15 +1,14 @@
 import { createId } from "@paralleldrive/cuid2";
 import { describe, expect, test } from "vitest";
 
-import { cache, deleteValue, getValue } from "~/server/cache";
+import { deleteValue, getValue } from "~/server/cache";
 import { courses, deliverables, schools, semesters } from "~/server/db/schema";
-
 import {
   cachePublicId,
   constructTableDiscriminantId,
   deconstructTableDiscriminantId,
   invalidatePublicId,
-} from ".";
+} from "~/server/db/schema/common";
 
 // INFO: These are just sanity checks, in-depth tests can come later.
 
@@ -58,23 +57,30 @@ describe("deconstructTableDiscriminantId", () => {
 
 describe("cachePublicId", () => {
   test("sets bidirectional cache", async () => {
-    testCases.forEach(async ({ table, internalId, publicId, discriminant }) => {
-      await cachePublicId(publicId, internalId, table);
-      expect(await getValue(publicId)).toEqual(discriminant);
-      expect(await getValue(discriminant)).toEqual(publicId);
-      await deleteValue(publicId);
-      await deleteValue(discriminant);
-    });
+    const tests = testCases.map(
+      async ({ table, internalId, publicId, discriminant }) => {
+        await cachePublicId(publicId, internalId, table);
+        expect(await getValue(publicId)).toEqual(discriminant);
+        expect(await getValue(discriminant)).toEqual(publicId);
+        await deleteValue(publicId);
+        await deleteValue(discriminant);
+      },
+    );
+
+    await Promise.all(tests);
   });
 });
 
 describe("invalidatePublicId", () => {
   test("invalidates cache", async () => {
-    testCases.forEach(async ({ table, internalId, publicId, discriminant }) => {
-      await cachePublicId(publicId, internalId, table);
-      await invalidatePublicId(publicId, internalId, table);
-      expect(await getValue(publicId)).toEqual(null);
-      expect(await getValue(discriminant)).toEqual(null);
-    });
+    const tests = testCases.map(
+      async ({ table, internalId, publicId, discriminant }) => {
+        await cachePublicId(publicId, internalId, table);
+        await invalidatePublicId(publicId, internalId, table);
+        expect(await getValue(publicId)).toEqual(null);
+        expect(await getValue(discriminant)).toEqual(null);
+      },
+    );
+    await Promise.all(tests);
   });
 });

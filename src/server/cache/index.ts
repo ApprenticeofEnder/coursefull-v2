@@ -1,16 +1,16 @@
-import { createClient } from "redis";
+import { Redis } from "ioredis";
 
 import { env } from "~/env";
 import { getLogger } from "~/server/logger";
 
 const logger = getLogger();
-const redisClient = createClient({ url: env.CACHE_URL });
+const redisClient = new Redis(env.CACHE_URL);
+
+logger.info("Redis cache connected.");
+
 redisClient.on("error", (err) => {
   logger.withError(err).error("Error in Redis client.");
 });
-
-// wtf why is this allowed to have an await here
-await redisClient.connect();
 
 export const cache = redisClient;
 

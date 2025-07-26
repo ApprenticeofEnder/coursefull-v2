@@ -1,9 +1,11 @@
+import { isCuid } from "@paralleldrive/cuid2";
 import { and, asc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { withPagination } from "~/server/db";
+import { publicToInternalId } from "~/server/db/schema";
 import { schools } from "~/server/db/schema";
 import { getLogger } from "~/server/logger";
 
@@ -13,11 +15,15 @@ export const schoolRouter = createTRPCRouter({
   enroll: protectedProcedure
     .input(
       z.object({
-        schoolId: z.number(),
+        schoolId: z.string().refine((val) => isCuid(val)),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const school = await ctx.db.query.schools.findFirst();
+      const internalSchoolId = await publicToInternalId(
+        input.schoolId,
+        schools,
+      );
+      const school = await ctx.db.query.schools.findFirst({});
     }),
 
   search: publicProcedure
@@ -30,8 +36,6 @@ export const schoolRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      // TODO: Work out pagination, see if there's a way of retrieving the number of remaining pages
-
       const baseQuery = ctx.db
         .select()
         .from(schools)

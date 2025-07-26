@@ -10,7 +10,10 @@ export const semesters = createTable(
   "semester",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d.text("public_id").$defaultFn(() => createId()),
+    publicId: d
+      .text("public_id")
+      .$defaultFn(() => createId())
+      .notNull(),
     createdBy: d.text("created_by").references(() => users.id),
     public: d.boolean().default(false),
     schoolId: d
