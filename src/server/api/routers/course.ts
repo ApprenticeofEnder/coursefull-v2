@@ -33,7 +33,7 @@ export const courseRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         shortCode: z.string(),
-        semesterId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        semester: z.string(),
         public: z.boolean(),
         role: z.string(),
         goal: z.number().gt(0).lte(100),
@@ -42,29 +42,6 @@ export const courseRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.transaction(async (tx) => {
         const userId = ctx.session.user.id;
-        const courseInsert = await tx
-          .insert(courses)
-          .values({
-            createdBy: userId,
-            ...input,
-          })
-          .returning({ id: courses.id });
-        if (!courseInsert[0]?.id) {
-          return Promise.reject("Semester insertion failed.");
-        }
-        const courseId = courseInsert[0]?.id;
-        await tx.insert(userCourses).values({
-          goal: input.goal,
-          role: input.role,
-          userId,
-          courseId,
-        });
-        ctx.logger
-          .withMetadata({
-            userId,
-            courseId,
-          })
-          .debug("Course created.");
       });
     }),
 

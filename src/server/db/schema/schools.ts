@@ -2,60 +2,59 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, pgView, primaryKey } from "drizzle-orm/pg-core";
 
-import { createTable } from "./common";
+import { coursefullSchema, createTable } from "./common";
 import { users } from "./users";
 
-export const schools = createTable(
+export const schools = coursefullSchema.table(
   "school",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d
-      .text("public_id")
+    id: d
+      .text()
       .$defaultFn(() => createId())
-      .notNull(),
+      .primaryKey(),
     name: d.varchar({ length: 256 }).notNull().unique(),
-    alphaTwoCode: d
-      .varchar("alpha_two_code", { length: 4 })
-      .notNull()
-      .default("N/A"),
+    alphaTwoCode: d.varchar({ length: 4 }).notNull().default("N/A"),
     country: d.varchar({ length: 256 }).notNull().default("N/A"),
-    stateOrProvince: d.varchar("state_or_province", { length: 256 }),
+    stateOrProvince: d.varchar({ length: 256 }),
     // This just lets us know whether we can load in semester data automatically.
-    hasAutoload: d.boolean("has_autoload").default(false),
+    hasAutoload: d.boolean().default(false),
     domains: d.json().$type<string[]>().default([]),
     webPages: d.json("web_pages").$type<string[]>().default([]),
     createdAt: d
-      .timestamp("created_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d
-      .timestamp("updated_at", { withTimezone: true })
-      .$onUpdate(() => new Date()),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [index("school_name_idx").on(t.name)],
 );
 
-export const usersInSchools = createTable(
+export const usersInSchools = coursefullSchema.table(
   "user_in_school",
   (d) => ({
-    userId: d
-      .text("user_id")
+    user: d
+      .text()
       .references(() => users.id)
       .notNull(),
-    schoolId: d
-      .integer("school_id")
+    school: d
+      .text()
       .references(() => schools.id)
       .notNull(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    primaryKey({ columns: [t.userId, t.schoolId] }),
+    primaryKey({ columns: [t.user, t.school] }),
     foreignKey({
-      columns: [t.userId],
+      columns: [t.user],
       foreignColumns: [users.id],
       name: "user_in_school_user_fk",
     }),
     foreignKey({
-      columns: [t.schoolId],
+      columns: [t.school],
       foreignColumns: [schools.id],
       name: "user_in_school_school_fk",
     }),

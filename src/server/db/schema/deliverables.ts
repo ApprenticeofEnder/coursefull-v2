@@ -2,48 +2,46 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
-import { createTable } from "./common";
+import { coursefullSchema, deliverableType } from "./common";
 import { courses } from "./courses";
 import { users } from "./users";
 
-export const deliverables = createTable(
+export const deliverables = coursefullSchema.table(
   "deliverable",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d
-      .text("public_id")
+    id: d
+      .text()
       .$defaultFn(() => createId())
-      .notNull(),
-    createdBy: d.text("created_by").references(() => users.id),
+      .primaryKey(),
+    createdBy: d.text().references(() => users.id),
     public: d.boolean().default(false),
-    courseId: d
-      .integer("course_id")
+    course: d
+      .text()
       .references(() => courses.id)
       .notNull(),
-    name: d.varchar({ length: 256 }),
-    weight: d.real(),
-    type: d.varchar({ length: 256 }), // TODO: see if this can't be converted to a postgres enum somehow
+    name: d.varchar({ length: 256 }).notNull(),
+    weight: d.real().notNull(),
+    type: deliverableType().notNull(),
     startsAt: d
-      .timestamp("starts_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     deadline: d
-      .timestamp("deadline", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 DAY'`)
       .notNull(),
     createdAt: d
-      .timestamp("created_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d
-      .timestamp("updated_at", { withTimezone: true })
-      .$onUpdate(() => new Date()),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
     index("deliverable_name_idx").on(t.name),
     index("deliverable_deadline_idx").on(t.deadline),
+    index("deliverable_starts_at_idx").on(t.startsAt),
     foreignKey({
-      columns: [t.courseId],
+      columns: [t.course],
       foreignColumns: [courses.id],
       name: "deliverable_course_fk",
     }),
@@ -55,15 +53,15 @@ export const deliverables = createTable(
   ],
 );
 
-export const studentDeliverables = createTable(
+export const studentDeliverables = coursefullSchema.table(
   "student_deliverable",
   (d) => ({
-    userId: d
-      .text("user_id")
+    user: d
+      .text()
       .references(() => users.id)
       .notNull(),
-    deliverableId: d
-      .integer("deliverable_id")
+    deliverable: d
+      .text()
       .references(() => deliverables.id)
       .notNull(),
     goal: d.real(),
@@ -72,14 +70,14 @@ export const studentDeliverables = createTable(
     notes: d.text(),
   }),
   (t) => [
-    primaryKey({ columns: [t.userId, t.deliverableId] }),
+    primaryKey({ columns: [t.user, t.deliverable] }),
     foreignKey({
-      columns: [t.userId],
+      columns: [t.user],
       foreignColumns: [users.id],
       name: "student_deliverable_user_fk",
     }),
     foreignKey({
-      columns: [t.deliverableId],
+      columns: [t.deliverable],
       foreignColumns: [deliverables.id],
       name: "student_deliverable_deliverable_fk",
     }),

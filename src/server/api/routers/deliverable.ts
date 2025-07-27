@@ -3,11 +3,8 @@ import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
-import {
-  deliverables,
-  semesters,
-  studentDeliverables,
-} from "~/server/db/schema";
+import { createDeliverable } from "~/server/db";
+import { deliverableType, deliverables, userRole } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
@@ -38,10 +35,11 @@ export const deliverableRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
-        courseId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        name: z.string().trim(),
+        course: z.string(),
         public: z.boolean(),
         weight: z.number().gt(0).lte(100),
+        type: z.enum(deliverableType.enumValues),
         mark: z.number().gte(0).lte(100).optional(),
         complete: z.boolean(),
         role: z.string(),
@@ -51,30 +49,10 @@ export const deliverableRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.transaction(async (tx) => {
         const userId = ctx.session.user.id;
-        // TODO: Update marks and goals on update
-        // Do we need a dedicated function for that?
-        const deliverableInsert = await tx
-          .insert(deliverables)
-          .values({
-            createdBy: userId,
-            ...input,
-          })
-          .returning({ id: semesters.id });
-        if (!deliverableInsert[0]?.id) {
-          return Promise.reject("Semester insertion failed.");
-        }
-        const deliverableId = deliverableInsert[0]?.id;
-        await tx.insert(studentDeliverables).values({
-          userId,
-          deliverableId,
-          ...input,
-        });
-        ctx.logger
-          .withMetadata({
-            userId,
-            deliverableId,
-          })
-          .debug("Deliverable created.");
+        // First off, double check the course actually exists and store it
+        // Then double check the user can actually create a deliverable
+        // Finally, create the deliverable
+        // await createDeliverable(input);
       });
     }),
 

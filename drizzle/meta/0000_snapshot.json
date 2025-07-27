@@ -1,38 +1,21 @@
 {
-  "id": "d7daf6e1-651e-4a08-bab4-9999ca00e0bc",
+  "id": "7d13b376-25fc-4cf4-b795-40991bb1f06c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.coursefull_course": {
-      "name": "coursefull_course",
-      "schema": "",
+    "coursefull.course": {
+      "name": "course",
+      "schema": "coursefull",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "byDefault",
-            "name": "coursefull_course_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "public_id": {
-          "name": "public_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
-        "created_by": {
-          "name": "created_by",
+        "createdBy": {
+          "name": "createdBy",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -44,9 +27,9 @@
           "notNull": false,
           "default": false
         },
-        "semester_id": {
-          "name": "semester_id",
-          "type": "integer",
+        "semester": {
+          "name": "semester",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -94,12 +77,13 @@
         }
       },
       "foreignKeys": {
-        "coursefull_course_created_by_coursefull_user_id_fk": {
-          "name": "coursefull_course_created_by_coursefull_user_id_fk",
-          "tableFrom": "coursefull_course",
-          "tableTo": "coursefull_user",
+        "course_createdBy_user_id_fk": {
+          "name": "course_createdBy_user_id_fk",
+          "tableFrom": "course",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -107,12 +91,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_course_semester_id_coursefull_semester_id_fk": {
-          "name": "coursefull_course_semester_id_coursefull_semester_id_fk",
-          "tableFrom": "coursefull_course",
-          "tableTo": "coursefull_semester",
+        "course_semester_semester_id_fk": {
+          "name": "course_semester_semester_id_fk",
+          "tableFrom": "course",
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "semester_id"
+            "semester"
           ],
           "columnsTo": [
             "id"
@@ -122,10 +107,11 @@
         },
         "course_semester_fk": {
           "name": "course_semester_fk",
-          "tableFrom": "coursefull_course",
-          "tableTo": "coursefull_semester",
+          "tableFrom": "course",
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "semester_id"
+            "semester"
           ],
           "columnsTo": [
             "id"
@@ -135,10 +121,11 @@
         },
         "course_created_by_fk": {
           "name": "course_created_by_fk",
-          "tableFrom": "coursefull_course",
-          "tableTo": "coursefull_user",
+          "tableFrom": "course",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -153,25 +140,26 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_user_course": {
-      "name": "coursefull_user_course",
-      "schema": "",
+    "coursefull.user_course": {
+      "name": "user_course",
+      "schema": "coursefull",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "user": {
+          "name": "user",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "course_id": {
-          "name": "course_id",
-          "type": "integer",
+        "course": {
+          "name": "course",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "role": {
           "name": "role",
-          "type": "varchar(32)",
+          "type": "user_role",
+          "typeSchema": "coursefull",
           "primaryKey": false,
           "notNull": false
         },
@@ -181,8 +169,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "deliverable_goal": {
-          "name": "deliverable_goal",
+        "deliverableGoal": {
+          "name": "deliverableGoal",
           "type": "real",
           "primaryKey": false,
           "notNull": false
@@ -196,12 +184,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "coursefull_user_course_user_id_coursefull_user_id_fk": {
-          "name": "coursefull_user_course_user_id_coursefull_user_id_fk",
-          "tableFrom": "coursefull_user_course",
-          "tableTo": "coursefull_user",
+        "user_course_user_user_id_fk": {
+          "name": "user_course_user_user_id_fk",
+          "tableFrom": "user_course",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -209,12 +198,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_user_course_course_id_coursefull_course_id_fk": {
-          "name": "coursefull_user_course_course_id_coursefull_course_id_fk",
-          "tableFrom": "coursefull_user_course",
-          "tableTo": "coursefull_course",
+        "user_course_course_course_id_fk": {
+          "name": "user_course_course_course_id_fk",
+          "tableFrom": "user_course",
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "course_id"
+            "course"
           ],
           "columnsTo": [
             "id"
@@ -224,10 +214,11 @@
         },
         "user_course_user_fk": {
           "name": "user_course_user_fk",
-          "tableFrom": "coursefull_user_course",
-          "tableTo": "coursefull_user",
+          "tableFrom": "user_course",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -237,10 +228,11 @@
         },
         "user_course_course_fk": {
           "name": "user_course_course_fk",
-          "tableFrom": "coursefull_user_course",
-          "tableTo": "coursefull_course",
+          "tableFrom": "user_course",
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "course_id"
+            "course"
           ],
           "columnsTo": [
             "id"
@@ -250,11 +242,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "coursefull_user_course_user_id_course_id_pk": {
-          "name": "coursefull_user_course_user_id_course_id_pk",
+        "user_course_user_course_pk": {
+          "name": "user_course_user_course_pk",
           "columns": [
-            "user_id",
-            "course_id"
+            "user",
+            "course"
           ]
         }
       },
@@ -263,35 +255,18 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_deliverable": {
-      "name": "coursefull_deliverable",
-      "schema": "",
+    "coursefull.deliverable": {
+      "name": "deliverable",
+      "schema": "coursefull",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "byDefault",
-            "name": "coursefull_deliverable_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "public_id": {
-          "name": "public_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
-        "created_by": {
-          "name": "created_by",
+        "createdBy": {
+          "name": "createdBy",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -303,9 +278,9 @@
           "notNull": false,
           "default": false
         },
-        "course_id": {
-          "name": "course_id",
-          "type": "integer",
+        "course": {
+          "name": "course",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -313,22 +288,23 @@
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "weight": {
           "name": "weight",
           "type": "real",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "type": {
           "name": "type",
-          "type": "varchar(256)",
+          "type": "deliverable_type",
+          "typeSchema": "coursefull",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "starts_at": {
-          "name": "starts_at",
+        "startsAt": {
+          "name": "startsAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -341,15 +317,15 @@
           "notNull": true,
           "default": "CURRENT_TIMESTAMP + INTERVAL '1 DAY'"
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -385,15 +361,31 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "deliverable_starts_at_idx": {
+          "name": "deliverable_starts_at_idx",
+          "columns": [
+            {
+              "expression": "startsAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "coursefull_deliverable_created_by_coursefull_user_id_fk": {
-          "name": "coursefull_deliverable_created_by_coursefull_user_id_fk",
-          "tableFrom": "coursefull_deliverable",
-          "tableTo": "coursefull_user",
+        "deliverable_createdBy_user_id_fk": {
+          "name": "deliverable_createdBy_user_id_fk",
+          "tableFrom": "deliverable",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -401,12 +393,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_deliverable_course_id_coursefull_course_id_fk": {
-          "name": "coursefull_deliverable_course_id_coursefull_course_id_fk",
-          "tableFrom": "coursefull_deliverable",
-          "tableTo": "coursefull_course",
+        "deliverable_course_course_id_fk": {
+          "name": "deliverable_course_course_id_fk",
+          "tableFrom": "deliverable",
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "course_id"
+            "course"
           ],
           "columnsTo": [
             "id"
@@ -416,10 +409,11 @@
         },
         "deliverable_course_fk": {
           "name": "deliverable_course_fk",
-          "tableFrom": "coursefull_deliverable",
-          "tableTo": "coursefull_course",
+          "tableFrom": "deliverable",
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "course_id"
+            "course"
           ],
           "columnsTo": [
             "id"
@@ -429,10 +423,11 @@
         },
         "deliverable_created_by_fk": {
           "name": "deliverable_created_by_fk",
-          "tableFrom": "coursefull_deliverable",
-          "tableTo": "coursefull_user",
+          "tableFrom": "deliverable",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -447,19 +442,19 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_student_deliverable": {
-      "name": "coursefull_student_deliverable",
-      "schema": "",
+    "coursefull.student_deliverable": {
+      "name": "student_deliverable",
+      "schema": "coursefull",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "user": {
+          "name": "user",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "deliverable_id": {
-          "name": "deliverable_id",
-          "type": "integer",
+        "deliverable": {
+          "name": "deliverable",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -490,12 +485,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "coursefull_student_deliverable_user_id_coursefull_user_id_fk": {
-          "name": "coursefull_student_deliverable_user_id_coursefull_user_id_fk",
-          "tableFrom": "coursefull_student_deliverable",
-          "tableTo": "coursefull_user",
+        "student_deliverable_user_user_id_fk": {
+          "name": "student_deliverable_user_user_id_fk",
+          "tableFrom": "student_deliverable",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -503,12 +499,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_student_deliverable_deliverable_id_coursefull_deliverable_id_fk": {
-          "name": "coursefull_student_deliverable_deliverable_id_coursefull_deliverable_id_fk",
-          "tableFrom": "coursefull_student_deliverable",
-          "tableTo": "coursefull_deliverable",
+        "student_deliverable_deliverable_deliverable_id_fk": {
+          "name": "student_deliverable_deliverable_deliverable_id_fk",
+          "tableFrom": "student_deliverable",
+          "tableTo": "deliverable",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "deliverable_id"
+            "deliverable"
           ],
           "columnsTo": [
             "id"
@@ -518,10 +515,11 @@
         },
         "student_deliverable_user_fk": {
           "name": "student_deliverable_user_fk",
-          "tableFrom": "coursefull_student_deliverable",
-          "tableTo": "coursefull_user",
+          "tableFrom": "student_deliverable",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -531,10 +529,11 @@
         },
         "student_deliverable_deliverable_fk": {
           "name": "student_deliverable_deliverable_fk",
-          "tableFrom": "coursefull_student_deliverable",
-          "tableTo": "coursefull_deliverable",
+          "tableFrom": "student_deliverable",
+          "tableTo": "deliverable",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "deliverable_id"
+            "deliverable"
           ],
           "columnsTo": [
             "id"
@@ -544,11 +543,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "coursefull_student_deliverable_user_id_deliverable_id_pk": {
-          "name": "coursefull_student_deliverable_user_id_deliverable_id_pk",
+        "student_deliverable_user_deliverable_pk": {
+          "name": "student_deliverable_user_deliverable_pk",
           "columns": [
-            "user_id",
-            "deliverable_id"
+            "user",
+            "deliverable"
           ]
         }
       },
@@ -557,32 +556,15 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_school": {
-      "name": "coursefull_school",
-      "schema": "",
+    "coursefull.school": {
+      "name": "school",
+      "schema": "coursefull",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "byDefault",
-            "name": "coursefull_school_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "public_id": {
-          "name": "public_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -590,8 +572,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "alpha_two_code": {
-          "name": "alpha_two_code",
+        "alphaTwoCode": {
+          "name": "alphaTwoCode",
           "type": "varchar(4)",
           "primaryKey": false,
           "notNull": true,
@@ -604,14 +586,14 @@
           "notNull": true,
           "default": "'N/A'"
         },
-        "state_or_province": {
-          "name": "state_or_province",
+        "stateOrProvince": {
+          "name": "stateOrProvince",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
         },
-        "has_autoload": {
-          "name": "has_autoload",
+        "hasAutoload": {
+          "name": "hasAutoload",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
@@ -631,15 +613,15 @@
           "notNull": false,
           "default": "'[]'::json"
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -665,8 +647,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "coursefull_school_name_unique": {
-          "name": "coursefull_school_name_unique",
+        "school_name_unique": {
+          "name": "school_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"
@@ -677,31 +659,45 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_user_in_school": {
-      "name": "coursefull_user_in_school",
-      "schema": "",
+    "coursefull.user_in_school": {
+      "name": "user_in_school",
+      "schema": "coursefull",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "user": {
+          "name": "user",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "school_id": {
-          "name": "school_id",
-          "type": "integer",
+        "school": {
+          "name": "school",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "coursefull_user_in_school_user_id_coursefull_user_id_fk": {
-          "name": "coursefull_user_in_school_user_id_coursefull_user_id_fk",
-          "tableFrom": "coursefull_user_in_school",
-          "tableTo": "coursefull_user",
+        "user_in_school_user_user_id_fk": {
+          "name": "user_in_school_user_user_id_fk",
+          "tableFrom": "user_in_school",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -709,12 +705,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_user_in_school_school_id_coursefull_school_id_fk": {
-          "name": "coursefull_user_in_school_school_id_coursefull_school_id_fk",
-          "tableFrom": "coursefull_user_in_school",
-          "tableTo": "coursefull_school",
+        "user_in_school_school_school_id_fk": {
+          "name": "user_in_school_school_school_id_fk",
+          "tableFrom": "user_in_school",
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "school_id"
+            "school"
           ],
           "columnsTo": [
             "id"
@@ -724,10 +721,11 @@
         },
         "user_in_school_user_fk": {
           "name": "user_in_school_user_fk",
-          "tableFrom": "coursefull_user_in_school",
-          "tableTo": "coursefull_user",
+          "tableFrom": "user_in_school",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -737,10 +735,11 @@
         },
         "user_in_school_school_fk": {
           "name": "user_in_school_school_fk",
-          "tableFrom": "coursefull_user_in_school",
-          "tableTo": "coursefull_school",
+          "tableFrom": "user_in_school",
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "school_id"
+            "school"
           ],
           "columnsTo": [
             "id"
@@ -750,11 +749,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "coursefull_user_in_school_user_id_school_id_pk": {
-          "name": "coursefull_user_in_school_user_id_school_id_pk",
+        "user_in_school_user_school_pk": {
+          "name": "user_in_school_user_school_pk",
           "columns": [
-            "user_id",
-            "school_id"
+            "user",
+            "school"
           ]
         }
       },
@@ -763,35 +762,18 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_semester": {
-      "name": "coursefull_semester",
-      "schema": "",
+    "coursefull.semester": {
+      "name": "semester",
+      "schema": "coursefull",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "byDefault",
-            "name": "coursefull_semester_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "public_id": {
-          "name": "public_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
-        "created_by": {
-          "name": "created_by",
+        "createdBy": {
+          "name": "createdBy",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -803,9 +785,9 @@
           "notNull": false,
           "default": false
         },
-        "school_id": {
-          "name": "school_id",
-          "type": "integer",
+        "school": {
+          "name": "school",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -813,31 +795,31 @@
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "starts_at": {
-          "name": "starts_at",
+        "startsAt": {
+          "name": "startsAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
-        "ends_at": {
-          "name": "ends_at",
+        "endsAt": {
+          "name": "endsAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP + INTERVAL '1 DAY'"
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -861,12 +843,13 @@
         }
       },
       "foreignKeys": {
-        "coursefull_semester_created_by_coursefull_user_id_fk": {
-          "name": "coursefull_semester_created_by_coursefull_user_id_fk",
-          "tableFrom": "coursefull_semester",
-          "tableTo": "coursefull_user",
+        "semester_createdBy_user_id_fk": {
+          "name": "semester_createdBy_user_id_fk",
+          "tableFrom": "semester",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -874,12 +857,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_semester_school_id_coursefull_school_id_fk": {
-          "name": "coursefull_semester_school_id_coursefull_school_id_fk",
-          "tableFrom": "coursefull_semester",
-          "tableTo": "coursefull_school",
+        "semester_school_school_id_fk": {
+          "name": "semester_school_school_id_fk",
+          "tableFrom": "semester",
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "school_id"
+            "school"
           ],
           "columnsTo": [
             "id"
@@ -889,10 +873,11 @@
         },
         "semester_school_fk": {
           "name": "semester_school_fk",
-          "tableFrom": "coursefull_semester",
-          "tableTo": "coursefull_school",
+          "tableFrom": "semester",
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "school_id"
+            "school"
           ],
           "columnsTo": [
             "id"
@@ -902,10 +887,11 @@
         },
         "semester_created_by_fk": {
           "name": "semester_created_by_fk",
-          "tableFrom": "coursefull_semester",
-          "tableTo": "coursefull_user",
+          "tableFrom": "semester",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "created_by"
+            "createdBy"
           ],
           "columnsTo": [
             "id"
@@ -920,25 +906,26 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_user_semester": {
-      "name": "coursefull_user_semester",
-      "schema": "",
+    "coursefull.user_semester": {
+      "name": "user_semester",
+      "schema": "coursefull",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "user": {
+          "name": "user",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "semester_id": {
-          "name": "semester_id",
-          "type": "integer",
+        "semester": {
+          "name": "semester",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "role": {
           "name": "role",
-          "type": "varchar(32)",
+          "type": "user_role",
+          "typeSchema": "coursefull",
           "primaryKey": false,
           "notNull": false
         },
@@ -953,16 +940,30 @@
           "type": "real",
           "primaryKey": false,
           "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "coursefull_user_semester_user_id_coursefull_user_id_fk": {
-          "name": "coursefull_user_semester_user_id_coursefull_user_id_fk",
-          "tableFrom": "coursefull_user_semester",
-          "tableTo": "coursefull_user",
+        "user_semester_user_user_id_fk": {
+          "name": "user_semester_user_user_id_fk",
+          "tableFrom": "user_semester",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -970,12 +971,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "coursefull_user_semester_semester_id_coursefull_semester_id_fk": {
-          "name": "coursefull_user_semester_semester_id_coursefull_semester_id_fk",
-          "tableFrom": "coursefull_user_semester",
-          "tableTo": "coursefull_semester",
+        "user_semester_semester_semester_id_fk": {
+          "name": "user_semester_semester_semester_id_fk",
+          "tableFrom": "user_semester",
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "semester_id"
+            "semester"
           ],
           "columnsTo": [
             "id"
@@ -985,10 +987,11 @@
         },
         "user_semester_user_fk": {
           "name": "user_semester_user_fk",
-          "tableFrom": "coursefull_user_semester",
-          "tableTo": "coursefull_user",
+          "tableFrom": "user_semester",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "user_id"
+            "user"
           ],
           "columnsTo": [
             "id"
@@ -998,10 +1001,11 @@
         },
         "user_semester_semester_fk": {
           "name": "user_semester_semester_fk",
-          "tableFrom": "coursefull_user_semester",
-          "tableTo": "coursefull_semester",
+          "tableFrom": "user_semester",
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsFrom": [
-            "semester_id"
+            "semester"
           ],
           "columnsTo": [
             "id"
@@ -1011,11 +1015,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "coursefull_user_semester_user_id_semester_id_pk": {
-          "name": "coursefull_user_semester_user_id_semester_id_pk",
+        "user_semester_user_semester_pk": {
+          "name": "user_semester_user_semester_pk",
           "columns": [
-            "user_id",
-            "semester_id"
+            "user",
+            "semester"
           ]
         }
       },
@@ -1024,9 +1028,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_account": {
-      "name": "coursefull_account",
-      "schema": "",
+    "coursefull.account": {
+      "name": "account",
+      "schema": "coursefull",
       "columns": {
         "userId": {
           "name": "userId",
@@ -1113,10 +1117,11 @@
         }
       },
       "foreignKeys": {
-        "coursefull_account_userId_coursefull_user_id_fk": {
-          "name": "coursefull_account_userId_coursefull_user_id_fk",
-          "tableFrom": "coursefull_account",
-          "tableTo": "coursefull_user",
+        "account_userId_user_id_fk": {
+          "name": "account_userId_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
             "userId"
           ],
@@ -1128,8 +1133,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "coursefull_account_provider_providerAccountId_pk": {
-          "name": "coursefull_account_provider_providerAccountId_pk",
+        "account_provider_providerAccountId_pk": {
+          "name": "account_provider_providerAccountId_pk",
           "columns": [
             "provider",
             "providerAccountId"
@@ -1141,9 +1146,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_session": {
-      "name": "coursefull_session",
-      "schema": "",
+    "coursefull.session": {
+      "name": "session",
+      "schema": "coursefull",
       "columns": {
         "sessionToken": {
           "name": "sessionToken",
@@ -1182,10 +1187,11 @@
         }
       },
       "foreignKeys": {
-        "coursefull_session_userId_coursefull_user_id_fk": {
-          "name": "coursefull_session_userId_coursefull_user_id_fk",
-          "tableFrom": "coursefull_session",
-          "tableTo": "coursefull_user",
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsFrom": [
             "userId"
           ],
@@ -1202,9 +1208,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_user": {
-      "name": "coursefull_user",
-      "schema": "",
+    "coursefull.user": {
+      "name": "user",
+      "schema": "coursefull",
       "columns": {
         "id": {
           "name": "id",
@@ -1216,7 +1222,7 @@
           "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "email": {
           "name": "email",
@@ -1224,8 +1230,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email_verified": {
-          "name": "email_verified",
+        "emailVerified": {
+          "name": "emailVerified",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false,
@@ -1248,14 +1254,27 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "coursefull_user_email_unique": {
-          "name": "coursefull_user_email_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
@@ -1266,9 +1285,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.coursefull_verification_token": {
-      "name": "coursefull_verification_token",
-      "schema": "",
+    "coursefull.verification_token": {
+      "name": "verification_token",
+      "schema": "coursefull",
       "columns": {
         "identifier": {
           "name": "identifier",
@@ -1292,8 +1311,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "coursefull_verification_token_identifier_token_pk": {
-          "name": "coursefull_verification_token_identifier_token_pk",
+        "verification_token_identifier_token_pk": {
+          "name": "verification_token_identifier_token_pk",
           "columns": [
             "identifier",
             "token"
@@ -1306,8 +1325,32 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
-  "schemas": {},
+  "enums": {
+    "coursefull.deliverable_type": {
+      "name": "deliverable_type",
+      "schema": "coursefull",
+      "values": [
+        "assignment",
+        "lab",
+        "tutorial",
+        "quiz",
+        "test",
+        "exam"
+      ]
+    },
+    "coursefull.user_role": {
+      "name": "user_role",
+      "schema": "coursefull",
+      "values": [
+        "student",
+        "student_owner",
+        "faculty"
+      ]
+    }
+  },
+  "schemas": {
+    "coursefull": "coursefull"
+  },
   "sequences": {},
   "roles": {},
   "policies": {},

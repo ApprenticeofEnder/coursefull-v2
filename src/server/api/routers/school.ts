@@ -5,7 +5,6 @@ import { z } from "zod";
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { withPagination } from "~/server/db";
-import { publicToInternalId } from "~/server/db/schema";
 import { schools } from "~/server/db/schema";
 import { getLogger } from "~/server/logger";
 
@@ -19,10 +18,6 @@ export const schoolRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const internalSchoolId = await publicToInternalId(
-        input.schoolId,
-        schools,
-      );
       const school = await ctx.db.query.schools.findFirst({});
     }),
 

@@ -13,18 +13,18 @@ export const schoolRelations = relations(schools, ({ many }) => ({
 
 export const usersInSchoolsRelations = relations(usersInSchools, ({ one }) => ({
   user: one(users, {
-    fields: [usersInSchools.userId],
+    fields: [usersInSchools.user],
     references: [users.id],
   }),
   school: one(schools, {
-    fields: [usersInSchools.schoolId],
+    fields: [usersInSchools.school],
     references: [schools.id],
   }),
 }));
 
 export const semestersRelations = relations(semesters, ({ one, many }) => ({
   school: one(schools, {
-    fields: [semesters.schoolId],
+    fields: [semesters.school],
     references: [schools.id],
   }),
   courses: many(courses),
@@ -33,18 +33,18 @@ export const semestersRelations = relations(semesters, ({ one, many }) => ({
 
 export const userSemestersRelations = relations(userSemesters, ({ one }) => ({
   user: one(users, {
-    fields: [userSemesters.userId],
+    fields: [userSemesters.user],
     references: [users.id],
   }),
   semester: one(semesters, {
-    fields: [userSemesters.semesterId],
+    fields: [userSemesters.semester],
     references: [semesters.id],
   }),
 }));
 
 export const coursesRelations = relations(courses, ({ one, many }) => ({
   semester: one(semesters, {
-    fields: [courses.semesterId],
+    fields: [courses.semester],
     references: [semesters.id],
   }),
   deliverables: many(deliverables),
@@ -53,11 +53,11 @@ export const coursesRelations = relations(courses, ({ one, many }) => ({
 
 export const userCoursesRelations = relations(userCourses, ({ one }) => ({
   user: one(users, {
-    fields: [userCourses.userId],
+    fields: [userCourses.user],
     references: [users.id],
   }),
   course: one(courses, {
-    fields: [userCourses.courseId],
+    fields: [userCourses.course],
     references: [courses.id],
   }),
 }));
@@ -66,7 +66,7 @@ export const deliverablesRelations = relations(
   deliverables,
   ({ one, many }) => ({
     course: one(courses, {
-      fields: [deliverables.courseId],
+      fields: [deliverables.course],
       references: [courses.id],
     }),
     studentDeliverables: many(studentDeliverables),
@@ -77,11 +77,11 @@ export const studentDeliverablesRelations = relations(
   studentDeliverables,
   ({ one }) => ({
     user: one(users, {
-      fields: [studentDeliverables.userId],
+      fields: [studentDeliverables.user],
       references: [users.id],
     }),
     deliverable: one(deliverables, {
-      fields: [studentDeliverables.deliverableId],
+      fields: [studentDeliverables.deliverable],
       references: [deliverables.id],
     }),
   }),

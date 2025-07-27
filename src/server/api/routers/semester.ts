@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
-import { semesters, userSemesters } from "~/server/db/schema";
+import { semesters } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
@@ -47,7 +47,7 @@ export const semesterRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        schoolId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        school: z.string(), // TODO: Add that cache layer to convert public IDs and internal ones
         public: z.boolean(),
         role: z.string(),
         startsAt: z.date(),
@@ -58,31 +58,6 @@ export const semesterRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.transaction(async (tx) => {
         const userId = ctx.session.user.id;
-        const semesterInsert = await tx
-          .insert(semesters)
-          .values({
-            createdBy: userId,
-            ...input,
-          })
-          .returning({ id: semesters.id });
-        if (!semesterInsert[0]?.id) {
-          return Promise.reject("Semester insertion failed.");
-        }
-
-        const semesterId = semesterInsert[0]?.id;
-        await tx.insert(userSemesters).values({
-          goal: input.goal,
-          role: input.role,
-          userId,
-          semesterId,
-        });
-
-        ctx.logger
-          .withMetadata({
-            userId,
-            semesterId,
-          })
-          .debug("Semester created.");
       });
     }),
 
@@ -90,7 +65,7 @@ export const semesterRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        schoolId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        school: z.string(),
         public: z.boolean(),
         role: z.string(),
         startsAt: z.date(),

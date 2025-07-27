@@ -2,22 +2,21 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
-import { createTable } from "./common";
+import { coursefullSchema, userRole } from "./common";
 import { semesters } from "./semesters";
 import { users } from "./users";
 
-export const courses = createTable(
+export const courses = coursefullSchema.table(
   "course",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d
-      .text("public_id")
+    id: d
+      .text()
       .$defaultFn(() => createId())
-      .notNull(),
-    createdBy: d.text("created_by").references(() => users.id),
+      .primaryKey(),
+    createdBy: d.text().references(() => users.id),
     public: d.boolean().default(false),
-    semesterId: d
-      .integer("semester_id")
+    semester: d
+      .text()
       .references(() => semesters.id)
       .notNull(),
     name: d.varchar({ length: 256 }).notNull(),
@@ -33,7 +32,7 @@ export const courses = createTable(
   (t) => [
     index("course_name_idx").on(t.name),
     foreignKey({
-      columns: [t.semesterId],
+      columns: [t.semester],
       foreignColumns: [semesters.id],
       name: "course_semester_fk",
     }),
@@ -45,34 +44,34 @@ export const courses = createTable(
   ],
 );
 
-export const userCourses = createTable(
+export const userCourses = coursefullSchema.table(
   "user_course",
   (d) => ({
-    userId: d
-      .text("user_id")
+    user: d
+      .text()
       .references(() => users.id)
       .notNull(),
-    courseId: d
-      .integer("course_id")
+    course: d
+      .text()
       .references(() => courses.id)
       .notNull(),
-    role: d.varchar({ length: 32 }),
+    role: userRole(),
     // For different roles, goals (grades) might have different meanings
     // For a prof or TA, the goal might be for the whole class/semester
     // For a student, the goal might be personal
     goal: d.real(),
-    deliverableGoal: d.real("deliverable_goal"),
+    deliverableGoal: d.real(),
     grade: d.real(),
   }),
   (t) => [
-    primaryKey({ columns: [t.userId, t.courseId] }),
+    primaryKey({ columns: [t.user, t.course] }),
     foreignKey({
-      columns: [t.userId],
+      columns: [t.user],
       foreignColumns: [users.id],
       name: "user_course_user_fk",
     }),
     foreignKey({
-      columns: [t.courseId],
+      columns: [t.course],
       foreignColumns: [courses.id],
       name: "user_course_course_fk",
     }),

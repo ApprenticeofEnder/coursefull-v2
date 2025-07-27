@@ -2,45 +2,42 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
-import { createTable } from "./common";
+import { coursefullSchema, userRole } from "./common";
 import { schools } from "./schools";
 import { users } from "./users";
 
-export const semesters = createTable(
+export const semesters = coursefullSchema.table(
   "semester",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    publicId: d
-      .text("public_id")
+    id: d
+      .text()
       .$defaultFn(() => createId())
-      .notNull(),
-    createdBy: d.text("created_by").references(() => users.id),
+      .primaryKey(),
+    createdBy: d.text().references(() => users.id),
     public: d.boolean().default(false),
-    schoolId: d
-      .integer("school_id")
+    school: d
+      .text()
       .references(() => schools.id)
       .notNull(),
-    name: d.varchar({ length: 256 }),
+    name: d.varchar({ length: 256 }).notNull(),
     startsAt: d
-      .timestamp("starts_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     endsAt: d
-      .timestamp("ends_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 DAY'`)
       .notNull(),
     createdAt: d
-      .timestamp("created_at", { withTimezone: true })
+      .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d
-      .timestamp("updated_at", { withTimezone: true })
-      .$onUpdate(() => new Date()),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
     index("semester_name_idx").on(t.name),
     foreignKey({
-      columns: [t.schoolId],
+      columns: [t.school],
       foreignColumns: [schools.id],
       name: "semester_school_fk",
     }),
@@ -52,33 +49,38 @@ export const semesters = createTable(
   ],
 );
 
-export const userSemesters = createTable(
+export const userSemesters = coursefullSchema.table(
   "user_semester",
   (d) => ({
-    userId: d
-      .text("user_id")
+    user: d
+      .text()
       .references(() => users.id)
       .notNull(),
-    semesterId: d
-      .integer("semester_id")
+    semester: d
+      .text()
       .references(() => semesters.id)
       .notNull(),
-    role: d.varchar({ length: 32 }),
+    role: userRole(),
     // For different roles, goals might have different meanings
     // For a prof or TA, the goal might be for the whole class/semester
     // For a student, the goal might be personal
     goal: d.real(),
     average: d.real(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    primaryKey({ columns: [t.userId, t.semesterId] }),
+    primaryKey({ columns: [t.user, t.semester] }),
     foreignKey({
-      columns: [t.userId],
+      columns: [t.user],
       foreignColumns: [users.id],
       name: "user_semester_user_fk",
     }),
     foreignKey({
-      columns: [t.semesterId],
+      columns: [t.semester],
       foreignColumns: [semesters.id],
       name: "user_semester_semester_fk",
     }),

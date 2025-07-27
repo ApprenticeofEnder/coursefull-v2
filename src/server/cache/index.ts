@@ -4,6 +4,7 @@ import { env } from "~/env";
 import { getLogger } from "~/server/logger";
 
 const logger = getLogger();
+
 const redisClient = new Redis(env.CACHE_URL);
 
 logger.info("Redis cache connected.");

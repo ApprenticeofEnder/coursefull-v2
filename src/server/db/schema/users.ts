@@ -3,17 +3,17 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { index, primaryKey } from "drizzle-orm/pg-core";
 
-import { createTable } from "./common";
+import { coursefullSchema } from "./common";
 
-export const users = createTable("user", (d) => ({
+export const users = coursefullSchema.table("user", (d) => ({
   id: d
     .text()
     .$defaultFn(() => createId())
     .primaryKey(),
-  name: d.varchar({ length: 255 }),
+  name: d.varchar({ length: 255 }).notNull(),
   email: d.varchar({ length: 255 }).notNull().unique(),
   emailVerified: d
-    .timestamp("email_verified", {
+    .timestamp({
       mode: "date",
       withTimezone: true,
     })
@@ -21,9 +21,16 @@ export const users = createTable("user", (d) => ({
   image: d.varchar({ length: 255 }),
   courseCredits: d.integer("course_credits"),
   subscribed: d.boolean(),
+  createdAt: d
+    .timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: d
+    .timestamp("updated_at", { withTimezone: true })
+    .$onUpdate(() => new Date()),
 }));
 
-export const accounts = createTable(
+export const accounts = coursefullSchema.table(
   "account",
   (d) => ({
     userId: d
@@ -47,7 +54,7 @@ export const accounts = createTable(
   ],
 );
 
-export const sessions = createTable(
+export const sessions = coursefullSchema.table(
   "session",
   (d) => ({
     sessionToken: d.varchar({ length: 255 }).notNull().primaryKey(),
@@ -60,7 +67,7 @@ export const sessions = createTable(
   (t) => [index("t_user_id_idx").on(t.userId)],
 );
 
-export const verificationTokens = createTable(
+export const verificationTokens = coursefullSchema.table(
   "verification_token",
   (d) => ({
     identifier: d.varchar({ length: 255 }).notNull(),
