@@ -67,7 +67,13 @@ export const studentDeliverables = coursefullSchema.table(
     goal: d.real(),
     mark: d.real(),
     complete: d.boolean(),
+    completedAt: d.timestamp({ withTimezone: true }),
     notes: d.text(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
     primaryKey({ columns: [t.user, t.deliverable] }),

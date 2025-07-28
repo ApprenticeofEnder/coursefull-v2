@@ -3,7 +3,8 @@ import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
-import { semesters } from "~/server/db/schema";
+import { createSemester } from "~/server/db";
+import { semesters, userRole } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
@@ -49,15 +50,18 @@ export const semesterRouter = createTRPCRouter({
         name: z.string(),
         school: z.string(), // TODO: Add that cache layer to convert public IDs and internal ones
         public: z.boolean(),
-        role: z.string(),
+        role: z.enum(userRole.enumValues),
         startsAt: z.date(),
         endsAt: z.date(),
         goal: z.number().gt(0).lte(100),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id;
+
+      await createSemester({
+        ...input,
+        createdBy: userId,
       });
     }),
 

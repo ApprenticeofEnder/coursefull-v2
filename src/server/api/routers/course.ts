@@ -3,7 +3,8 @@ import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
-import { courses, userCourses } from "~/server/db/schema";
+import { createCourse } from "~/server/db";
+import { courses, userCourses, userRole } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
@@ -35,13 +36,16 @@ export const courseRouter = createTRPCRouter({
         shortCode: z.string(),
         semester: z.string(),
         public: z.boolean(),
-        role: z.string(),
+        role: z.enum(userRole.enumValues),
         goal: z.number().gt(0).lte(100),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id;
+
+      await createCourse({
+        ...input,
+        createdBy: userId,
       });
     }),
 

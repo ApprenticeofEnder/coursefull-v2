@@ -40,19 +40,21 @@ export const deliverableRouter = createTRPCRouter({
         public: z.boolean(),
         weight: z.number().gt(0).lte(100),
         type: z.enum(deliverableType.enumValues),
+        startsAt: z.date(),
+        deadline: z.date(),
         mark: z.number().gte(0).lte(100).optional(),
-        complete: z.boolean(),
-        role: z.string(),
+        complete: z.boolean().optional(),
+        role: z.enum(userRole.enumValues),
+        goal: z.number().gt(0).lte(100),
         notes: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        const userId = ctx.session.user.id;
-        // First off, double check the course actually exists and store it
-        // Then double check the user can actually create a deliverable
-        // Finally, create the deliverable
-        // await createDeliverable(input);
+      const userId = ctx.session.user.id;
+
+      await createDeliverable({
+        ...input,
+        createdBy: userId,
       });
     }),
 

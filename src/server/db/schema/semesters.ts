@@ -65,7 +65,6 @@ export const userSemesters = coursefullSchema.table(
     // For a prof or TA, the goal might be for the whole class/semester
     // For a student, the goal might be personal
     goal: d.real(),
-    average: d.real(),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)

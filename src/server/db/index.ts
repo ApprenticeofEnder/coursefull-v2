@@ -148,4 +148,14 @@ export async function createDeliverable(
   // Might need to update the marks...
 }
 
-// export async function updateCourseGoals();
+export async function updateCourseGrade({
+  users,
+  course,
+}: {
+  users?: string[];
+  course: string;
+}) {
+  // For a given course, and maybe a given user or set of users, update the course grade
+  // TODO: Pull all student deliverables for a course relating to one user
+  //
+}
