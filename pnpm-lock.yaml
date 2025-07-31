@@ -250,8 +250,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0(vite@7.0.6(@types/node@20.19.8)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.20.3))
       drizzle-kit:
-        specifier: ^0.30.5
-        version: 0.30.6
+        specifier: ^0.31.0
+        version: 0.31.4
       eslint:
         specifier: ^9.23.0
         version: 9.31.0(jiti@2.4.2)
@@ -2566,8 +2566,8 @@ packages:
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
 
-  drizzle-kit@0.30.6:
-    resolution: {integrity: sha512-U4wWit0fyZuGuP7iNmRleQyK2V8wCuv57vf5l3MnG4z4fzNTjY/U13M8owyQ5RavqvqxBifWORaR3wIUzlN64g==}
+  drizzle-kit@0.31.4:
+    resolution: {integrity: sha512-tCPWVZWZqWVx2XUsVpJRnH9Mx0ClVOf5YUHerZ5so1OKSlqww4zy1R5ksEdGRcO3tM3zj0PYN6V48TbQCL1RfA==}
     hasBin: true
 
   drizzle-orm@0.44.3:
@@ -5478,7 +5478,8 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.8.0
 
-  '@petamoriken/float16@3.9.2': {}
+  '@petamoriken/float16@3.9.2':
+    optional: true
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -6833,13 +6834,12 @@ snapshots:
 
   dom-accessibility-api@0.5.16: {}
 
-  drizzle-kit@0.30.6:
+  drizzle-kit@0.31.4:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.25.7
       esbuild-register: 3.6.0(esbuild@0.25.7)
-      gel: 2.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -6876,7 +6876,8 @@ snapshots:
 
   entities@6.0.1: {}
 
-  env-paths@3.0.0: {}
+  env-paths@3.0.0:
+    optional: true
 
   error@7.0.2:
     dependencies:
@@ -7328,6 +7329,7 @@ snapshots:
       which: 4.0.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   gensync@1.0.0-beta.2: {}
 
@@ -7615,7 +7617,8 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isexe@3.1.1: {}
+  isexe@3.1.1:
+    optional: true
 
   iterator.prototype@1.1.5:
     dependencies:
@@ -8444,7 +8447,8 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  shell-quote@1.8.3: {}
+  shell-quote@1.8.3:
+    optional: true
 
   side-channel-list@1.0.0:
     dependencies:
@@ -9004,6 +9008,7 @@ snapshots:
   which@4.0.0:
     dependencies:
       isexe: 3.1.1
+    optional: true
 
   why-is-node-running@2.3.0:
     dependencies:
