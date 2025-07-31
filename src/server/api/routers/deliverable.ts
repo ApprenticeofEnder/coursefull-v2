@@ -32,7 +32,7 @@ export const deliverableRouter = createTRPCRouter({
       .orderBy(asc(deliverables.name));
   }),
 
-  create: protectedProcedure
+  userCreate: protectedProcedure
     .input(
       z.object({
         name: z.string().trim(),
@@ -58,11 +58,18 @@ export const deliverableRouter = createTRPCRouter({
       });
     }),
 
-  update: protectedProcedure
+  updateBaseDeliverable: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
-        deliverableId: z.number(), // TODO: Add that cache layer to convert public IDs and internal ones
+        deliverable: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {}),
+
+  updateStudentDeliverable: protectedProcedure
+    .input(
+      z.object({
+        deliverableId: z.number(),
         public: z.boolean(),
         goal: z.number().gt(0).lte(100),
         mark: z.number().gte(0).lte(100).optional(),

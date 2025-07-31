@@ -48,7 +48,7 @@ export const semesterRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        school: z.string(), // TODO: Add that cache layer to convert public IDs and internal ones
+        school: z.string(),
         public: z.boolean(),
         role: z.enum(userRole.enumValues),
         startsAt: z.date(),

@@ -1,7 +1,19 @@
-import { sql } from "drizzle-orm";
+import {
+  type ExtractTableRelationsFromSchema,
+  and,
+  eq,
+  inArray,
+  isNotNull,
+  sql,
+  sum,
+} from "drizzle-orm";
 import { upstashCache } from "drizzle-orm/cache/upstash";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { type PgSelect } from "drizzle-orm/pg-core";
+import {
+  NodePgDatabase,
+  type NodePgQueryResultHKT,
+  drizzle,
+} from "drizzle-orm/node-postgres";
+import { PgDatabase, type PgSelect, PgTransaction } from "drizzle-orm/pg-core";
 import { Pool } from "pg";
 
 import { env } from "~/env";
@@ -34,6 +46,10 @@ export function withPagination<T extends PgSelect>(
 ) {
   return qb.limit(pageSize).offset((page - 1) * pageSize);
 }
+
+/**
+ * QUERIES
+ */
 
 export async function createSemester(
   data: schema.NewSemester & {
@@ -139,23 +155,44 @@ export async function createDeliverable(
         deliverable: deliverable.id,
         complete: data.complete ?? false,
       });
+      // Last but not least, we'll update the course marks - not sure if the db call inside a transaction is going to mess with it.
+      await updateCourseGrades([data.createdBy], data.course);
     }
     logger
       .withMetadata({ deliverable: deliverable.id })
       .trace("Deliverable created successfully.");
   });
-
-  // Might need to update the marks...
 }
 
-export async function updateCourseGrade({
-  users,
-  course,
-}: {
-  users?: string[];
-  course: string;
-}) {
-  // For a given course, and maybe a given user or set of users, update the course grade
-  // TODO: Pull all student deliverables for a course relating to one user
-  //
+export async function updateCourseGrades(users: string[], course: string) {
+  const grades = db.$with("grades").as(
+    db
+      .select()
+      .from(schema.courseGrades)
+      .where(
+        and(
+          inArray(schema.courseGrades.user, users),
+          eq(schema.courseGrades.course, course),
+        ),
+      ),
+  );
+  const deliverableGoal = schema.calculateTarget(
+    schema.userCourses.goal,
+    100,
+    grades.pointsEarned,
+    grades.weightCompleted,
+  );
+  await db
+    .update(schema.userCourses)
+    .set({
+      grade: grades.grade,
+      deliverableGoal,
+    })
+    .from(grades)
+    .where(
+      and(
+        eq(schema.userCourses.user, grades.user),
+        eq(schema.userCourses.course, grades.course),
+      ),
+    );
 }

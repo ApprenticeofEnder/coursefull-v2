@@ -2,7 +2,6 @@ import { isCuid } from "@paralleldrive/cuid2";
 import { and, asc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 
-import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { withPagination } from "~/server/db";
 import { schools } from "~/server/db/schema";
@@ -18,6 +17,7 @@ export const schoolRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
       const school = await ctx.db.query.schools.findFirst({});
     }),
 

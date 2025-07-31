@@ -1,4 +1,5 @@
-import { pgSchema } from "drizzle-orm/pg-core";
+import { type SQL, sql } from "drizzle-orm";
+import { PgColumn, pgSchema } from "drizzle-orm/pg-core";
 import { pgTableCreator } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `coursefull_${name}`);
@@ -24,3 +25,29 @@ export const userRole = coursefullSchema.enum("user_role", [
 ]);
 
 export type UserRole = (typeof userRole.enumValues)[number];
+
+export function weightedSum(
+  valueColumn: PgColumn | SQL | SQL.Aliased,
+  weightColumn: PgColumn | SQL | SQL.Aliased,
+): SQL<number> {
+  return sql<number>`sum(${valueColumn} * ${weightColumn})`;
+}
+
+export function weightedAverage(
+  valueColumn: PgColumn | SQL | SQL.Aliased,
+  weightColumn: PgColumn | SQL | SQL.Aliased,
+): SQL<number> {
+  return sql<number>`${weightedSum(valueColumn, weightColumn)} / sum(${weightColumn})`;
+}
+
+/**
+ * This is specifically to calculate a new target for courses and semesters.
+ */
+export function calculateTarget(
+  goalColumn: PgColumn | SQL | SQL.Aliased,
+  totalWeight: number,
+  pointsEarnedColumn: PgColumn | SQL | SQL.Aliased,
+  weightCompletedColumn: PgColumn | SQL | SQL.Aliased,
+) {
+  return sql<number>`(${goalColumn} * ${totalWeight} - ${pointsEarnedColumn}) / (${totalWeight} - ${weightCompletedColumn})`;
+}
