@@ -126,8 +126,6 @@ FROM ${studentDeliverables}
 INNER JOIN ${deliverables} ON ${eq(deliverables.id, studentDeliverables.deliverableId)}
 WHERE ${eq(studentDeliverables.complete, true)} AND ${isNotNull(studentDeliverables.mark)}`;
 
-console.log(gradedDeliverablesSpec);
-
 export const gradedDeliverables = coursefullSchema
   .view("graded_student_deliverables", {
     deliverable: text().notNull(),
@@ -152,8 +150,6 @@ const courseGradesSpec = sql`SELECT
 FROM ${gradedDeliverables}
 INNER JOIN ${courses} on ${eq(gradedDeliverables.course, courses.id)}
 GROUP BY ${gradedDeliverables.userId}, ${gradedDeliverables.course}`;
-
-console.log(courseGradesSpec.getSQL());
 
 export const courseGrades = coursefullSchema
   .view("student_course_grades", {
