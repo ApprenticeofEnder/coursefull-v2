@@ -1,20 +1,39 @@
+import { isCuid } from "@paralleldrive/cuid2";
 import { asc } from "drizzle-orm";
 import { z } from "zod";
 
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { createSemester } from "~/server/db";
-import { semesters, userRole } from "~/server/db/schema";
+import { semesters, userRole, userSemesters } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
 export const semesterRouter = createTRPCRouter({
+  enroll: protectedProcedure
+    .input(
+      z.object({
+        role: z.enum(userRole.enumValues),
+        semester: z.string().refine((val) => isCuid(val)),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const enrolledSemesters = await ctx.db.select().from(userSemesters);
+    }),
+
   search: publicProcedure
     .input(
       z.object({
         limit: z.number().gte(10).catch(25),
         page: z.number().gte(1).catch(1),
-        schoolId: z.number().optional(),
+        school: z
+          .string()
+          .optional()
+          .refine((val) => !!val && isCuid(val)),
+        schoolName: z.string().optional(),
+        name: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -61,6 +80,7 @@ export const semesterRouter = createTRPCRouter({
 
       await createSemester({
         ...input,
+        schoolId: input.school,
         createdBy: userId,
       });
     }),
@@ -69,7 +89,7 @@ export const semesterRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        school: z.string(),
+        school: z.string().refine((val) => !!val && isCuid(val)),
         public: z.boolean(),
         role: z.string(),
         startsAt: z.date(),

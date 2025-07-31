@@ -1,19 +1,7 @@
-import {
-  type ExtractTableRelationsFromSchema,
-  and,
-  eq,
-  inArray,
-  isNotNull,
-  sql,
-  sum,
-} from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { upstashCache } from "drizzle-orm/cache/upstash";
-import {
-  NodePgDatabase,
-  type NodePgQueryResultHKT,
-  drizzle,
-} from "drizzle-orm/node-postgres";
-import { PgDatabase, type PgSelect, PgTransaction } from "drizzle-orm/pg-core";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { type PgSelect } from "drizzle-orm/pg-core";
 import { Pool } from "pg";
 
 import { env } from "~/env";
@@ -74,8 +62,8 @@ export async function createSemester(
       // If we have an actual creator for the semester, let's associate them
 
       await tx.insert(schema.userSemesters).values({
-        user: data.createdBy,
-        semester: semester.id,
+        userId: data.createdBy,
+        semesterId: semester.id,
         role: data.role,
         goal: data.goal,
       });
@@ -109,8 +97,8 @@ export async function createCourse(
     if (!!data.createdBy) {
       // If we have a creator, associate it
       await tx.insert(schema.userCourses).values({
-        user: data.createdBy,
-        course: course.id,
+        userId: data.createdBy,
+        courseId: course.id,
         role: data.role,
         goal: data.goal,
       });
@@ -151,23 +139,31 @@ export async function createDeliverable(
       // If we have a creator that is a student, add it to their deliverables
       await tx.insert(schema.studentDeliverables).values({
         ...data,
-        user: data.createdBy,
-        deliverable: deliverable.id,
+        userId: data.createdBy,
+        deliverableId: deliverable.id,
         complete: data.complete ?? false,
       });
-      // Last but not least, we'll update the course marks - not sure if the db call inside a transaction is going to mess with it.
-      await updateCourseGrades([data.createdBy], data.course);
     }
     logger
       .withMetadata({ deliverable: deliverable.id })
       .trace("Deliverable created successfully.");
   });
+  // Last but not least, we'll update the course marks if the deliverable has a creator.
+  if (data.createdBy) {
+    await updateCourseGrades([data.createdBy], data.courseId);
+  }
 }
 
 export async function updateCourseGrades(users: string[], course: string) {
   const grades = db.$with("grades").as(
     db
-      .select()
+      .select({
+        user: schema.courseGrades.user,
+        course: schema.courseGrades.course,
+        grade: schema.courseGrades.grade,
+        pointsEarned: schema.courseGrades.pointsEarned,
+        weightCompleted: schema.courseGrades.weightCompleted,
+      })
       .from(schema.courseGrades)
       .where(
         and(
@@ -191,8 +187,8 @@ export async function updateCourseGrades(users: string[], course: string) {
     .from(grades)
     .where(
       and(
-        eq(schema.userCourses.user, grades.user),
-        eq(schema.userCourses.course, grades.course),
+        eq(schema.userCourses.userId, grades.user),
+        eq(schema.userCourses.courseId, grades.course),
       ),
     );
 }

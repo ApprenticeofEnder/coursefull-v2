@@ -1,9 +1,13 @@
 import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
-import { foreignKey, index, pgView, primaryKey } from "drizzle-orm/pg-core";
+import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
-import { coursefullSchema, createTable } from "./common";
+import { coursefullSchema } from "./common";
 import { users } from "./users";
+
+/**
+ * TABLES
+ */
 
 export const schools = coursefullSchema.table(
   "school",
@@ -32,11 +36,11 @@ export const schools = coursefullSchema.table(
 export const usersInSchools = coursefullSchema.table(
   "user_in_school",
   (d) => ({
-    user: d
+    userId: d
       .text()
       .references(() => users.id)
       .notNull(),
-    school: d
+    schoolId: d
       .text()
       .references(() => schools.id)
       .notNull(),
@@ -47,19 +51,27 @@ export const usersInSchools = coursefullSchema.table(
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    primaryKey({ columns: [t.user, t.school] }),
+    primaryKey({ columns: [t.userId, t.schoolId] }),
     foreignKey({
-      columns: [t.user],
+      columns: [t.userId],
       foreignColumns: [users.id],
       name: "user_in_school_user_fk",
     }),
     foreignKey({
-      columns: [t.school],
+      columns: [t.schoolId],
       foreignColumns: [schools.id],
       name: "user_in_school_school_fk",
     }),
   ],
 );
+
+/**
+ * VIEWS
+ */
+
+/**
+ * TYPES
+ */
 
 export type School = typeof schools.$inferSelect;
 export type NewSchool = typeof schools.$inferInsert;

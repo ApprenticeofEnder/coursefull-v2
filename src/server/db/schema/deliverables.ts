@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { and, eq, isNotNull, sql, sum } from "drizzle-orm";
-import { foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
+import { alias, foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
 
 import {
   coursefullSchema,
@@ -24,7 +24,7 @@ export const deliverables = coursefullSchema.table(
       .primaryKey(),
     createdBy: d.text().references(() => users.id),
     public: d.boolean().default(false),
-    course: d
+    courseId: d
       .text()
       .references(() => courses.id)
       .notNull(),
@@ -50,7 +50,7 @@ export const deliverables = coursefullSchema.table(
     index("deliverable_deadline_idx").on(t.deadline),
     index("deliverable_starts_at_idx").on(t.startsAt),
     foreignKey({
-      columns: [t.course],
+      columns: [t.courseId],
       foreignColumns: [courses.id],
       name: "deliverable_course_fk",
     }),
@@ -65,11 +65,11 @@ export const deliverables = coursefullSchema.table(
 export const studentDeliverables = coursefullSchema.table(
   "student_deliverable",
   (d) => ({
-    user: d
+    userId: d
       .text()
       .references(() => users.id)
       .notNull(),
-    deliverable: d
+    deliverableId: d
       .text()
       .references(() => deliverables.id)
       .notNull(),
@@ -85,14 +85,14 @@ export const studentDeliverables = coursefullSchema.table(
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    primaryKey({ columns: [t.user, t.deliverable] }),
+    primaryKey({ columns: [t.userId, t.deliverableId] }),
     foreignKey({
-      columns: [t.user],
+      columns: [t.userId],
       foreignColumns: [users.id],
       name: "student_deliverable_user_fk",
     }),
     foreignKey({
-      columns: [t.deliverable],
+      columns: [t.deliverableId],
       foreignColumns: [deliverables.id],
       name: "student_deliverable_deliverable_fk",
     }),
@@ -106,13 +106,14 @@ export const studentDeliverables = coursefullSchema.table(
 export const gradedDeliverables = coursefullSchema
   .view("graded_student_deliverables")
   .as((qb) => {
-    return qb
+    const query = qb
       .select({
         deliverable: deliverables.id,
+        course: deliverables.courseId,
         name: deliverables.name,
         weight: deliverables.weight,
         mark: studentDeliverables.mark,
-        user: studentDeliverables.user,
+        userId: studentDeliverables.userId,
         completedAt: studentDeliverables.completedAt,
         notes: studentDeliverables.notes,
         type: deliverables.type,
@@ -121,7 +122,7 @@ export const gradedDeliverables = coursefullSchema
       .from(studentDeliverables)
       .innerJoin(
         deliverables,
-        eq(deliverables.id, studentDeliverables.deliverable),
+        eq(deliverables.id, studentDeliverables.deliverableId),
       )
       .where(
         and(
@@ -129,14 +130,15 @@ export const gradedDeliverables = coursefullSchema
           isNotNull(studentDeliverables.mark),
         ),
       );
+    return query;
   });
 
 export const courseGrades = coursefullSchema
   .view("student_course_grades")
   .as((qb) => {
-    return qb
+    const query = qb
       .select({
-        user: gradedDeliverables.user,
+        userId: gradedDeliverables.userId,
         grade: weightedAverage(
           gradedDeliverables.mark,
           gradedDeliverables.weight,
@@ -149,8 +151,10 @@ export const courseGrades = coursefullSchema
         course: courses.id,
       })
       .from(gradedDeliverables)
-      .innerJoin(courses, eq(deliverables.course, courses.id))
-      .groupBy(gradedDeliverables.user, courses.id);
+      .innerJoin(courses, eq(gradedDeliverables.course, courses.id))
+      .groupBy(gradedDeliverables.userId, courses.id);
+    console.log(query.toSQL());
+    return query;
   });
 
 /**

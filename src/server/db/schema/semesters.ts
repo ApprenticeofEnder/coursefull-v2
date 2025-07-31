@@ -15,7 +15,7 @@ export const semesters = coursefullSchema.table(
       .primaryKey(),
     createdBy: d.text().references(() => users.id),
     public: d.boolean().default(false),
-    school: d
+    schoolId: d
       .text()
       .references(() => schools.id)
       .notNull(),
@@ -37,7 +37,7 @@ export const semesters = coursefullSchema.table(
   (t) => [
     index("semester_name_idx").on(t.name),
     foreignKey({
-      columns: [t.school],
+      columns: [t.schoolId],
       foreignColumns: [schools.id],
       name: "semester_school_fk",
     }),
@@ -52,11 +52,11 @@ export const semesters = coursefullSchema.table(
 export const userSemesters = coursefullSchema.table(
   "user_semester",
   (d) => ({
-    user: d
+    userId: d
       .text()
       .references(() => users.id)
       .notNull(),
-    semester: d
+    semesterId: d
       .text()
       .references(() => semesters.id)
       .notNull(),
@@ -72,14 +72,14 @@ export const userSemesters = coursefullSchema.table(
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    primaryKey({ columns: [t.user, t.semester] }),
+    primaryKey({ columns: [t.userId, t.semesterId] }),
     foreignKey({
-      columns: [t.user],
+      columns: [t.userId],
       foreignColumns: [users.id],
       name: "user_semester_user_fk",
     }),
     foreignKey({
-      columns: [t.semester],
+      columns: [t.semesterId],
       foreignColumns: [semesters.id],
       name: "user_semester_semester_fk",
     }),

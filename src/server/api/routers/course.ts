@@ -45,6 +45,7 @@ export const courseRouter = createTRPCRouter({
 
       await createCourse({
         ...input,
+        semesterId: input.semester,
         createdBy: userId,
       });
     }),

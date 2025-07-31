@@ -54,6 +54,7 @@ export const deliverableRouter = createTRPCRouter({
 
       await createDeliverable({
         ...input,
+        courseId: input.course,
         createdBy: userId,
       });
     }),
