@@ -1,6 +1,14 @@
 import { createId } from "@paralleldrive/cuid2";
 import { and, eq, isNotNull, sql, sum } from "drizzle-orm";
-import { alias, foreignKey, index, primaryKey } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  foreignKey,
+  index,
+  primaryKey,
+  real,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 import {
   coursefullSchema,
@@ -103,59 +111,59 @@ export const studentDeliverables = coursefullSchema.table(
  * VIEWS
  */
 
+const gradedDeliverablesSpec = sql`SELECT 
+  ${deliverables.id} as deliverable,
+  ${deliverables.courseId} as course,
+  ${deliverables.name} as name,
+  ${deliverables.weight} as weight,
+  ${studentDeliverables.mark} as mark,
+  ${studentDeliverables.userId} as user_id,
+  ${studentDeliverables.completedAt} as completed_at,
+  ${studentDeliverables.notes} as notes,
+  ${deliverables.type} as type,
+  ${deliverables.public} as public
+FROM ${studentDeliverables}
+INNER JOIN ${deliverables} ON ${eq(deliverables.id, studentDeliverables.deliverableId)}
+WHERE ${eq(studentDeliverables.complete, true)} AND ${isNotNull(studentDeliverables.mark)}`;
+
+console.log(gradedDeliverablesSpec);
+
 export const gradedDeliverables = coursefullSchema
-  .view("graded_student_deliverables")
-  .as((qb) => {
-    const query = qb
-      .select({
-        deliverable: deliverables.id,
-        course: deliverables.courseId,
-        name: deliverables.name,
-        weight: deliverables.weight,
-        mark: studentDeliverables.mark,
-        userId: studentDeliverables.userId,
-        completedAt: studentDeliverables.completedAt,
-        notes: studentDeliverables.notes,
-        type: deliverables.type,
-        public: deliverables.public,
-      })
-      .from(studentDeliverables)
-      .innerJoin(
-        deliverables,
-        eq(deliverables.id, studentDeliverables.deliverableId),
-      )
-      .where(
-        and(
-          eq(studentDeliverables.complete, true),
-          isNotNull(studentDeliverables.mark),
-        ),
-      );
-    return query;
-  });
+  .view("graded_student_deliverables", {
+    deliverable: text().notNull(),
+    course: text().notNull(),
+    name: text().notNull(),
+    weight: real().notNull(),
+    mark: real().notNull(),
+    userId: text().notNull(),
+    completedAt: timestamp().notNull(),
+    notes: text().notNull(),
+    type: deliverableType().notNull(),
+    public: boolean().notNull(),
+  })
+  .as(gradedDeliverablesSpec);
+
+const courseGradesSpec = sql`SELECT
+  ${gradedDeliverables.userId} as userId,
+  ${weightedAverage(gradedDeliverables.mark, gradedDeliverables.weight)} as grade,
+  ${sum(gradedDeliverables.weight)} as weightCompleted,
+  ${weightedSum(gradedDeliverables.mark, gradedDeliverables.weight)} as pointsEarned,
+  ${gradedDeliverables.course} as course
+FROM ${gradedDeliverables}
+INNER JOIN ${courses} on ${eq(gradedDeliverables.course, courses.id)}
+GROUP BY ${gradedDeliverables.userId}, ${gradedDeliverables.course}`;
+
+console.log(courseGradesSpec.getSQL());
 
 export const courseGrades = coursefullSchema
-  .view("student_course_grades")
-  .as((qb) => {
-    const query = qb
-      .select({
-        userId: gradedDeliverables.userId,
-        grade: weightedAverage(
-          gradedDeliverables.mark,
-          gradedDeliverables.weight,
-        ),
-        weightCompleted: sum(gradedDeliverables.weight),
-        pointsEarned: weightedSum(
-          gradedDeliverables.mark,
-          gradedDeliverables.weight,
-        ),
-        course: courses.id,
-      })
-      .from(gradedDeliverables)
-      .innerJoin(courses, eq(gradedDeliverables.course, courses.id))
-      .groupBy(gradedDeliverables.userId, courses.id);
-    console.log(query.toSQL());
-    return query;
-  });
+  .view("student_course_grades", {
+    userId: text().notNull(),
+    grade: real().notNull(),
+    weightCompleted: real().notNull(),
+    pointsEarned: real().notNull(),
+    course: text().notNull(),
+  })
+  .as(courseGradesSpec);
 
 /**
  * TYPES

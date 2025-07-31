@@ -157,17 +157,11 @@ export async function createDeliverable(
 export async function updateCourseGrades(users: string[], course: string) {
   const grades = db.$with("grades").as(
     db
-      .select({
-        user: schema.courseGrades.user,
-        course: schema.courseGrades.course,
-        grade: schema.courseGrades.grade,
-        pointsEarned: schema.courseGrades.pointsEarned,
-        weightCompleted: schema.courseGrades.weightCompleted,
-      })
+      .select()
       .from(schema.courseGrades)
       .where(
         and(
-          inArray(schema.courseGrades.user, users),
+          inArray(schema.courseGrades.userId, users),
           eq(schema.courseGrades.course, course),
         ),
       ),
@@ -187,7 +181,7 @@ export async function updateCourseGrades(users: string[], course: string) {
     .from(grades)
     .where(
       and(
-        eq(schema.userCourses.userId, grades.user),
+        eq(schema.userCourses.userId, grades.userId),
         eq(schema.userCourses.courseId, grades.course),
       ),
     );
