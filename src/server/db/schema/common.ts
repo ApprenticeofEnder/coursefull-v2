@@ -29,15 +29,17 @@ export type UserRole = (typeof userRole.enumValues)[number];
 export function weightedSum(
   valueColumn: PgColumn | SQL | SQL.Aliased,
   weightColumn: PgColumn | SQL | SQL.Aliased,
+  fieldName?: string,
 ): SQL<number> {
-  return sql<number>`sum(${valueColumn} * ${weightColumn})`;
+  return sql<number>`sum(${valueColumn} * ${weightColumn})${fieldName ? " AS " + fieldName : ""}`;
 }
 
 export function weightedAverage(
   valueColumn: PgColumn | SQL | SQL.Aliased,
   weightColumn: PgColumn | SQL | SQL.Aliased,
+  fieldName?: string,
 ): SQL<number> {
-  return sql<number>`${weightedSum(valueColumn, weightColumn)} / sum(${weightColumn})`;
+  return sql<number>`${weightedSum(valueColumn, weightColumn)} / sum(${weightColumn})${fieldName ? " AS " + fieldName : ""}`;
 }
 
 /**
@@ -48,6 +50,7 @@ export function calculateTarget(
   totalWeight: number,
   pointsEarnedColumn: PgColumn | SQL | SQL.Aliased,
   weightCompletedColumn: PgColumn | SQL | SQL.Aliased,
+  fieldName?: string,
 ) {
-  return sql<number>`(${goalColumn} * ${totalWeight} - ${pointsEarnedColumn}) / (${totalWeight} - ${weightCompletedColumn})`;
+  return sql<number>`(${goalColumn} * ${totalWeight} - ${pointsEarnedColumn}) / (${totalWeight} - ${weightCompletedColumn})${fieldName ? " AS " + fieldName : ""}`;
 }
