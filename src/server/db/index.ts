@@ -159,11 +159,11 @@ export async function updateCourseGrades(users: string[], course: string) {
   const grades = db.$with("grades").as(
     db
       .select()
-      .from(views.courseGrades)
+      .from(views.studentGradeData)
       .where(
         and(
-          inArray(views.courseGrades.userId, users),
-          eq(views.courseGrades.course, course),
+          inArray(views.studentGradeData.userId, users),
+          eq(views.studentGradeData.course, course),
         ),
       ),
   );

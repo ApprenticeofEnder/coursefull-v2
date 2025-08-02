@@ -19,8 +19,8 @@ export const gradedDeliverables = coursefullSchema
   })
   .existing();
 
-export const courseGrades = coursefullSchema
-  .view("student_course_grades", {
+export const studentGradeData = coursefullSchema
+  .view("student_grade_data", {
     userId: text().notNull(),
     grade: real().notNull(),
     weightCompleted: real().notNull(),

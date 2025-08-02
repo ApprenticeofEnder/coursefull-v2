@@ -23,7 +23,7 @@ WHERE
 
 --> statement-breakpoint
 CREATE
-OR REPLACE VIEW "coursefull"."student_course_grades" AS
+OR REPLACE VIEW "coursefull"."student_grade_data" AS
 SELECT
   gsd.user_id AS user_id,
   SUM(gsd.mark * gsd.weight) / SUM(gsd.weight) AS grade,
@@ -36,4 +36,14 @@ FROM
 GROUP BY
   gsd.user_id,
   gsd.course;
+
+--> statement-breakpoint
+CREATE
+OR REPLACE VIEW "coursefull"."student_course_grades" AS
+SELECT
+  -- TODO: Work out exactly what fields we need
+  *
+FROM
+  "coursefull"."user_courses" uc
+  INNER JOIN "coursefull"."course" c on uc.course_id = c.id;
 
