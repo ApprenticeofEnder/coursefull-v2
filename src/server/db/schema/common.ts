@@ -52,5 +52,11 @@ export function calculateTarget(
   weightCompletedColumn: PgColumn | SQL | SQL.Aliased,
   fieldName?: string,
 ) {
-  return sql<number>`(${goalColumn} * ${totalWeight} - ${pointsEarnedColumn}) / (${totalWeight} - ${weightCompletedColumn})${fieldName ? " AS " + fieldName : ""}`;
+  const numerator = sql<number>`(${goalColumn} * ${totalWeight} - ${pointsEarnedColumn})`;
+  const denominator = sql<
+    number | null
+  >`NULLIF(${totalWeight} - ${weightCompletedColumn}, 0)`;
+  return sql<
+    number | null
+  >`${numerator} / ${denominator}${fieldName ? " AS " + fieldName : ""}`;
 }

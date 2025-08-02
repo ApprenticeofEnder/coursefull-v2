@@ -8,6 +8,7 @@ import { env } from "~/env";
 import { getLogger } from "~/server/logger";
 
 import * as schema from "./schema";
+import * as views from "./views";
 
 const pool = new Pool({
   connectionString: env.DATABASE_URL,
@@ -158,11 +159,11 @@ export async function updateCourseGrades(users: string[], course: string) {
   const grades = db.$with("grades").as(
     db
       .select()
-      .from(schema.courseGrades)
+      .from(views.courseGrades)
       .where(
         and(
-          inArray(schema.courseGrades.userId, users),
-          eq(schema.courseGrades.course, course),
+          inArray(views.courseGrades.userId, users),
+          eq(views.courseGrades.course, course),
         ),
       ),
   );

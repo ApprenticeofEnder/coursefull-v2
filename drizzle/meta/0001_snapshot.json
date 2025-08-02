@@ -1,6 +1,6 @@
 {
-  "id": "68cf4273-e362-4253-b743-ce8ace1d6bf4",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "c90c0ef8-f6d8-46a6-9804-64a001213adc",
+  "prevId": "68cf4273-e362-4253-b743-ce8ace1d6bf4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -71,67 +71,67 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "course_created_by_user_id_fk": {
           "name": "course_created_by_user_id_fk",
           "tableFrom": "course",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "course_semester_id_semester_id_fk": {
           "name": "course_semester_id_semester_id_fk",
           "tableFrom": "course",
-          "tableTo": "semester",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "semester_id"
           ],
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "course_semester_fk": {
           "name": "course_semester_fk",
           "tableFrom": "course",
-          "tableTo": "semester",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "semester_id"
           ],
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "course_created_by_fk": {
           "name": "course_created_by_fk",
           "tableFrom": "course",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -187,58 +187,58 @@
         "user_course_user_id_user_id_fk": {
           "name": "user_course_user_id_user_id_fk",
           "tableFrom": "user_course",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_course_course_id_course_id_fk": {
           "name": "user_course_course_id_course_id_fk",
           "tableFrom": "user_course",
-          "tableTo": "course",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_course_user_fk": {
           "name": "user_course_user_fk",
           "tableFrom": "user_course",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_course_course_fk": {
           "name": "user_course_course_fk",
           "tableFrom": "user_course",
-          "tableTo": "course",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -343,9 +343,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "deliverable_deadline_idx": {
           "name": "deliverable_deadline_idx",
@@ -358,9 +358,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "deliverable_starts_at_idx": {
           "name": "deliverable_starts_at_idx",
@@ -373,67 +373,67 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "deliverable_created_by_user_id_fk": {
           "name": "deliverable_created_by_user_id_fk",
           "tableFrom": "deliverable",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "deliverable_course_id_course_id_fk": {
           "name": "deliverable_course_id_course_id_fk",
           "tableFrom": "deliverable",
-          "tableTo": "course",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "deliverable_course_fk": {
           "name": "deliverable_course_fk",
           "tableFrom": "deliverable",
-          "tableTo": "course",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "course",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "deliverable_created_by_fk": {
           "name": "deliverable_created_by_fk",
           "tableFrom": "deliverable",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -507,58 +507,58 @@
         "student_deliverable_user_id_user_id_fk": {
           "name": "student_deliverable_user_id_user_id_fk",
           "tableFrom": "student_deliverable",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "student_deliverable_deliverable_id_deliverable_id_fk": {
           "name": "student_deliverable_deliverable_id_deliverable_id_fk",
           "tableFrom": "student_deliverable",
-          "tableTo": "deliverable",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "deliverable_id"
           ],
+          "tableTo": "deliverable",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "student_deliverable_user_fk": {
           "name": "student_deliverable_user_fk",
           "tableFrom": "student_deliverable",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "student_deliverable_deliverable_fk": {
           "name": "student_deliverable_deliverable_fk",
           "tableFrom": "student_deliverable",
-          "tableTo": "deliverable",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "deliverable_id"
           ],
+          "tableTo": "deliverable",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -658,9 +658,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -668,10 +668,10 @@
       "uniqueConstraints": {
         "school_name_unique": {
           "name": "school_name_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "name"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -713,58 +713,58 @@
         "user_in_school_user_id_user_id_fk": {
           "name": "user_in_school_user_id_user_id_fk",
           "tableFrom": "user_in_school",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_in_school_school_id_school_id_fk": {
           "name": "user_in_school_school_id_school_id_fk",
           "tableFrom": "user_in_school",
-          "tableTo": "school",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "school_id"
           ],
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_in_school_user_fk": {
           "name": "user_in_school_user_fk",
           "tableFrom": "user_in_school",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_in_school_school_fk": {
           "name": "user_in_school_school_fk",
           "tableFrom": "user_in_school",
-          "tableTo": "school",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "school_id"
           ],
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -856,67 +856,67 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "semester_created_by_user_id_fk": {
           "name": "semester_created_by_user_id_fk",
           "tableFrom": "semester",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "semester_school_id_school_id_fk": {
           "name": "semester_school_id_school_id_fk",
           "tableFrom": "semester",
-          "tableTo": "school",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "school_id"
           ],
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "semester_school_fk": {
           "name": "semester_school_fk",
           "tableFrom": "semester",
-          "tableTo": "school",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "school_id"
           ],
+          "tableTo": "school",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "semester_created_by_fk": {
           "name": "semester_created_by_fk",
           "tableFrom": "semester",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -973,58 +973,58 @@
         "user_semester_user_id_user_id_fk": {
           "name": "user_semester_user_id_user_id_fk",
           "tableFrom": "user_semester",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_semester_semester_id_semester_id_fk": {
           "name": "user_semester_semester_id_semester_id_fk",
           "tableFrom": "user_semester",
-          "tableTo": "semester",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "semester_id"
           ],
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_semester_user_fk": {
           "name": "user_semester_user_fk",
           "tableFrom": "user_semester",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "user_semester_semester_fk": {
           "name": "user_semester_semester_fk",
           "tableFrom": "user_semester",
-          "tableTo": "semester",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "semester_id"
           ],
+          "tableTo": "semester",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -1124,25 +1124,25 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -1194,25 +1194,25 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
-          "tableTo": "user",
-          "schemaTo": "coursefull",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
+          "schemaTo": "coursefull",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1288,10 +1288,10 @@
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1364,10 +1364,10 @@
   "schemas": {
     "coursefull": "coursefull"
   },
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},
