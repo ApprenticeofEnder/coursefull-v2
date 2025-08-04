@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getPaginationOffset } from "~/lib/common";
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
 import { createCourse } from "~/server/db";
-import { courses, userCourses, userRole } from "~/server/db/schema";
+import { courses, userRole } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 

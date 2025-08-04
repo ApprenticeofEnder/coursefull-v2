@@ -38,3 +38,6 @@ DATABASE_URL="postgresql://{{ op://CourseFull/coursefull_v2_${APP_ENV:-dev}/data
 UNIVERSITY_DATA_FILE="data/world_universities_and_domains.json"
 
 # Observability
+
+# Build
+ANALYZE_BUNDLE="op://CourseFull/coursefull_v2_${APP_ENV:-dev}/developer/analyze_build"

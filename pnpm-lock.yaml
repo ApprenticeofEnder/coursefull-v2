@@ -44,9 +44,6 @@ importers:
       '@opentelemetry/instrumentation':
         specifier: ^0.203.0
         version: 0.203.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation-pino':
-        specifier: ^0.50.0
-        version: 0.50.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation-undici':
         specifier: ^0.14.0
         version: 0.14.0(@opentelemetry/api@1.9.0)
@@ -167,9 +164,6 @@ importers:
       pino:
         specifier: ^9.7.0
         version: 9.7.0
-      postgres:
-        specifier: ^3.4.4
-        version: 3.4.7
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -182,9 +176,6 @@ importers:
       react-hook-form:
         specifier: ^7.60.0
         version: 7.60.0(react@19.1.0)
-      redis:
-        specifier: ^5.6.1
-        version: 5.6.1
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2
@@ -206,9 +197,6 @@ importers:
       thread-stream:
         specifier: ^3.1.0
         version: 3.1.0
-      uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
       zod:
         specifier: ^4.0.0
         version: 4.0.5
@@ -219,6 +207,9 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3.3.1
         version: 3.3.1
+      '@next/bundle-analyzer':
+        specifier: ^15.4.5
+        version: 15.4.5
       '@next/env':
         specifier: ^15.4.4
         version: 15.4.4
@@ -466,6 +457,10 @@ packages:
 
   '@date-fns/tz@1.2.0':
     resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
+
+  '@discoveryjs/json-ext@0.5.7':
+    resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
+    engines: {node: '>=10.0.0'}
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
@@ -912,6 +907,9 @@ packages:
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
+  '@next/bundle-analyzer@15.4.5':
+    resolution: {integrity: sha512-S2o5Zn5u1iKdn9GrsUd86jvjXRXmKNT/JpQuovfLgUigPC+fshyKvNebvnYSshmztsZL1U7AuUPg71PzAaiHcg==}
+
   '@next/env@15.4.1':
     resolution: {integrity: sha512-DXQwFGAE2VH+f2TJsKepRXpODPU+scf5fDbKOME8MMyeyswe4XwgRdiiIYmBfkXU+2ssliLYznajTrOQdnLR5A==}
 
@@ -1085,12 +1083,6 @@ packages:
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
 
-  '@opentelemetry/instrumentation-pino@0.50.0':
-    resolution: {integrity: sha512-Pi0cWGp4f2gresq2xqef4IsuunLdebJ9n9tZxytDz2ci4euIfW36ILpszQmRNhwCVDCZLmUgGDKZGj4PXyPd0w==}
-    engines: {node: ^18.19.0 || >=20.6.0}
-    peerDependencies:
-      '@opentelemetry/api': ^1.3.0
-
   '@opentelemetry/instrumentation-undici@0.14.0':
     resolution: {integrity: sha512-2HN+7ztxAReXuxzrtA3WboAKlfP5OsPA57KQn2AdYZbJ3zeRPcLXyW4uO/jpLE6PLm0QRtmeGCmfYpqRlwgSwg==}
     engines: {node: ^18.19.0 || >=20.6.0}
@@ -1181,6 +1173,9 @@ packages:
 
   '@petamoriken/float16@3.9.2':
     resolution: {integrity: sha512-VgffxawQde93xKxT3qap3OH+meZf7VaSB5Sqd4Rqc+FP5alWbpOyan/7tRbOAvynjpG3GpdtAuGU/NdhQpmrog==}
+
+  '@polka/url@1.0.0-next.29':
+    resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -1641,34 +1636,6 @@ packages:
 
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
-
-  '@redis/bloom@5.6.1':
-    resolution: {integrity: sha512-5/22U76IMEfn6TeZ+uvjXspHw+ykBF0kpBa8xouzeHaQMXs/auqBUOEYzU2VKYDvnd2RSpPTyIg82oB7PpUgLg==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@redis/client': ^5.6.1
-
-  '@redis/client@5.6.1':
-    resolution: {integrity: sha512-bWHmSFIJ5w1Y4aHsYs46XMDHKQsBHFRhNcllYaBxz2Zl+lu+gbm5yI9BqxvKh48bLTs/Wx1Kns0gN2WIasE8MA==}
-    engines: {node: '>= 18'}
-
-  '@redis/json@5.6.1':
-    resolution: {integrity: sha512-cTggVzPIVuiFeXcEcnTRiUzV7rmUvM9KUYxWiHyjsAVACTEUe4ifKkvzrij0H/z3ammU5tfGACffDB3olBwtVA==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@redis/client': ^5.6.1
-
-  '@redis/search@5.6.1':
-    resolution: {integrity: sha512-+eOjx8O2YoKygjqkLpTHqcAq0zKLjior+ee2tRBx/3RSf1+OHxiC9Y6NstshQpvB1XHqTw9n7+f0+MsRJZrp0g==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@redis/client': ^5.6.1
-
-  '@redis/time-series@5.6.1':
-    resolution: {integrity: sha512-sd3q4jMJdoSO2akw1L9NrdFI1JJ6zeMgMUoTh4a34p9sY3AnOI4aDLCecy8L2IcPAP1oNR3TbLFJiCJDQ35QTA==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@redis/client': ^5.6.1
 
   '@redux-devtools/extension@3.3.0':
     resolution: {integrity: sha512-X34S/rC8S/M1BIrkYD1mJ5f8vlH0BDqxXrs96cvxSBo4FhMdbhU+GUGsmNYov1xjSyLMHgo8NYrUG8bNX7525g==}
@@ -2222,6 +2189,10 @@ packages:
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
+  acorn-walk@8.3.4:
+    resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
+    engines: {node: '>=0.4.0'}
+
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
@@ -2448,6 +2419,10 @@ packages:
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
 
+  commander@7.2.0:
+    resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
+    engines: {node: '>= 10'}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -2500,6 +2475,9 @@ packages:
 
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
+
+  debounce@1.2.1:
+    resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -2665,6 +2643,9 @@ packages:
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
+
+  duplexer@0.1.2:
+    resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
 
   electron-to-chromium@1.5.191:
     resolution: {integrity: sha512-xcwe9ELcuxYLUFqZZxL19Z6HVKcvNkIwhbHUz7L3us6u12yR+7uY89dSl570f/IqNthx8dAw3tojG7i4Ni4tDA==}
@@ -3024,6 +3005,10 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  gzip-size@6.0.0:
+    resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
+    engines: {node: '>=10'}
+
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -3062,6 +3047,9 @@ packages:
   html-encoding-sniffer@4.0.0:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
     engines: {node: '>=18'}
+
+  html-escaper@2.0.2:
+    resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
@@ -3187,6 +3175,10 @@ packages:
   is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
+
+  is-plain-object@5.0.0:
+    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
+    engines: {node: '>=0.10.0'}
 
   is-potential-custom-element-name@1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
@@ -3490,6 +3482,10 @@ packages:
   module-details-from-path@1.0.4:
     resolution: {integrity: sha512-EGWKgxALGMgzvxYF1UyGTy0HXX/2vHLkw6+NvDKW2jypWbHpjQuj4UMcqQWXHERJhVGKikolT06G3bcKe4fi7w==}
 
+  mrmime@2.0.1:
+    resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
+    engines: {node: '>=10'}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -3606,6 +3602,10 @@ packages:
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
+
+  opener@1.5.2:
+    resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
+    hasBin: true
 
   opentracing@0.14.7:
     resolution: {integrity: sha512-vz9iS7MJ5+Bp1URw8Khvdyw1H/hGvzHWlKQ7eRrQojSCDL1/SrWfrY9QebLw97n2deyRtzHRC3MkQfVNUCo91Q==}
@@ -3949,10 +3949,6 @@ packages:
     resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
     engines: {node: '>=4'}
 
-  redis@5.6.1:
-    resolution: {integrity: sha512-O9DwAvcBm/lrlkGE0A6gNBtUdA8J9oD9njeLYlLzmm+MGTR7nd7VkpspfXqeXFg3gm89zldDqckyaHhXfhY80g==}
-    engines: {node: '>= 18'}
-
   redux@5.0.1:
     resolution: {integrity: sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==}
 
@@ -4106,6 +4102,10 @@ packages:
 
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
+
+  sirv@2.0.4:
+    resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
+    engines: {node: '>= 10'}
 
   sonic-boom@4.2.0:
     resolution: {integrity: sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww==}
@@ -4289,6 +4289,10 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
+  totalist@3.0.1:
+    resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
+    engines: {node: '>=6'}
+
   tough-cookie@5.1.2:
     resolution: {integrity: sha512-FVDYdxtnj0G6Qm/DhNPSb8Ju59ULcup3tuJxkFb5K8Bv2pUXILbf0xZWU8PX8Ov19OXljbUyveOFwRMwkXzO+A==}
     engines: {node: '>=16'}
@@ -4416,10 +4420,6 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
-    hasBin: true
-
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -4513,6 +4513,11 @@ packages:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
 
+  webpack-bundle-analyzer@4.10.1:
+    resolution: {integrity: sha512-s3P7pgexgT/HTUSYgxJyn28A+99mmLq4HsJepMPzu0R8ImJc52QNqaFYW1Z2z2uIb1/J3eYgaAWVpaC+v/1aAQ==}
+    engines: {node: '>= 10.13.0'}
+    hasBin: true
+
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
@@ -4566,6 +4571,18 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+
+  ws@7.5.10:
+    resolution: {integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==}
+    engines: {node: '>=8.3.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   ws@8.18.3:
     resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
@@ -4820,6 +4837,8 @@ snapshots:
   '@csstools/css-tokenizer@3.0.4': {}
 
   '@date-fns/tz@1.2.0': {}
+
+  '@discoveryjs/json-ext@0.5.7': {}
 
   '@drizzle-team/brocli@0.10.2': {}
 
@@ -5168,6 +5187,13 @@ snapshots:
       '@tybys/wasm-util': 0.10.0
     optional: true
 
+  '@next/bundle-analyzer@15.4.5':
+    dependencies:
+      webpack-bundle-analyzer: 4.10.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@next/env@15.4.1': {}
 
   '@next/env@15.4.4': {}
@@ -5348,15 +5374,6 @@ snapshots:
       '@opentelemetry/sdk-trace-base': 2.0.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.36.0
 
-  '@opentelemetry/instrumentation-pino@0.50.0(@opentelemetry/api@1.9.0)':
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/api-logs': 0.203.0
-      '@opentelemetry/core': 2.0.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation': 0.203.0(@opentelemetry/api@1.9.0)
-    transitivePeerDependencies:
-      - supports-color
-
   '@opentelemetry/instrumentation-undici@0.14.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -5480,6 +5497,8 @@ snapshots:
 
   '@petamoriken/float16@3.9.2':
     optional: true
+
+  '@polka/url@1.0.0-next.29': {}
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -5946,26 +5965,6 @@ snapshots:
       '@types/react-dom': 19.1.6(@types/react@19.1.8)
 
   '@radix-ui/rect@1.1.1': {}
-
-  '@redis/bloom@5.6.1(@redis/client@5.6.1)':
-    dependencies:
-      '@redis/client': 5.6.1
-
-  '@redis/client@5.6.1':
-    dependencies:
-      cluster-key-slot: 1.1.2
-
-  '@redis/json@5.6.1(@redis/client@5.6.1)':
-    dependencies:
-      '@redis/client': 5.6.1
-
-  '@redis/search@5.6.1(@redis/client@5.6.1)':
-    dependencies:
-      '@redis/client': 5.6.1
-
-  '@redis/time-series@5.6.1(@redis/client@5.6.1)':
-    dependencies:
-      '@redis/client': 5.6.1
 
   '@redux-devtools/extension@3.3.0(redux@5.0.1)':
     dependencies:
@@ -6465,6 +6464,10 @@ snapshots:
     dependencies:
       acorn: 8.15.0
 
+  acorn-walk@8.3.4:
+    dependencies:
+      acorn: 8.15.0
+
   acorn@8.15.0: {}
 
   agent-base@7.1.4: {}
@@ -6732,6 +6735,8 @@ snapshots:
 
   colorette@2.0.20: {}
 
+  commander@7.2.0: {}
+
   concat-map@0.0.1: {}
 
   convert-source-map@2.0.0: {}
@@ -6785,6 +6790,8 @@ snapshots:
   date-fns@4.1.0: {}
 
   dateformat@4.6.3: {}
+
+  debounce@1.2.1: {}
 
   debug@3.2.7:
     dependencies:
@@ -6858,6 +6865,8 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       es-errors: 1.3.0
       gopd: 1.2.0
+
+  duplexer@0.1.2: {}
 
   electron-to-chromium@1.5.191: {}
 
@@ -7391,6 +7400,10 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  gzip-size@6.0.0:
+    dependencies:
+      duplexer: 0.1.2
+
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -7425,6 +7438,8 @@ snapshots:
   html-encoding-sniffer@4.0.0:
     dependencies:
       whatwg-encoding: 3.1.1
+
+  html-escaper@2.0.2: {}
 
   http-proxy-agent@7.0.2:
     dependencies:
@@ -7569,6 +7584,8 @@ snapshots:
       has-tostringtag: 1.0.2
 
   is-number@7.0.0: {}
+
+  is-plain-object@5.0.0: {}
 
   is-potential-custom-element-name@1.0.1: {}
 
@@ -7845,6 +7862,8 @@ snapshots:
 
   module-details-from-path@1.0.4: {}
 
+  mrmime@2.0.1: {}
+
   ms@2.1.3: {}
 
   nanoid@3.3.11: {}
@@ -7951,6 +7970,8 @@ snapshots:
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
+
+  opener@1.5.2: {}
 
   opentracing@0.14.7: {}
 
@@ -8096,7 +8117,8 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
-  postgres@3.4.7: {}
+  postgres@3.4.7:
+    optional: true
 
   preact-render-to-string@5.2.3(preact@10.11.3):
     dependencies:
@@ -8254,14 +8276,6 @@ snapshots:
   redis-parser@3.0.0:
     dependencies:
       redis-errors: 1.2.0
-
-  redis@5.6.1:
-    dependencies:
-      '@redis/bloom': 5.6.1(@redis/client@5.6.1)
-      '@redis/client': 5.6.1
-      '@redis/json': 5.6.1(@redis/client@5.6.1)
-      '@redis/search': 5.6.1(@redis/client@5.6.1)
-      '@redis/time-series': 5.6.1(@redis/client@5.6.1)
 
   redux@5.0.1: {}
 
@@ -8495,6 +8509,12 @@ snapshots:
       is-arrayish: 0.3.2
     optional: true
 
+  sirv@2.0.4:
+    dependencies:
+      '@polka/url': 1.0.0-next.29
+      mrmime: 2.0.1
+      totalist: 3.0.1
+
   sonic-boom@4.2.0:
     dependencies:
       atomic-sleep: 1.0.0
@@ -8692,6 +8712,8 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
+  totalist@3.0.1: {}
+
   tough-cookie@5.1.2:
     dependencies:
       tldts: 6.1.86
@@ -8850,8 +8872,6 @@ snapshots:
   util-deprecate@1.0.2:
     optional: true
 
-  uuid@11.1.0: {}
-
   uuid@8.3.2: {}
 
   vite-node@3.2.4(@types/node@20.19.8)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.20.3):
@@ -8949,6 +8969,25 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
+  webpack-bundle-analyzer@4.10.1:
+    dependencies:
+      '@discoveryjs/json-ext': 0.5.7
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      commander: 7.2.0
+      debounce: 1.2.1
+      escape-string-regexp: 4.0.0
+      gzip-size: 6.0.0
+      html-escaper: 2.0.2
+      is-plain-object: 5.0.0
+      opener: 1.5.2
+      picocolors: 1.1.1
+      sirv: 2.0.4
+      ws: 7.5.10
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
@@ -9024,6 +9063,8 @@ snapshots:
       strip-ansi: 6.0.1
 
   wrappy@1.0.2: {}
+
+  ws@7.5.10: {}
 
   ws@8.18.3: {}
 

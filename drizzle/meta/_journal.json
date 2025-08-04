@@ -15,6 +15,13 @@
       "when": 1754168174232,
       "tag": "0001_views",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754170354365,
+      "tag": "0002_course_views",
+      "breakpoints": true
     }
   ]
 }

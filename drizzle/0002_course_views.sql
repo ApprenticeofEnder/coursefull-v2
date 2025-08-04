@@ -1,0 +1,11 @@
+-- Custom SQL migration file, put your code below! --
+-- --> statement-breakpoint
+-- CREATE
+-- OR REPLACE VIEW "coursefull"."student_course_grades" AS
+-- SELECT
+--   -- TODO: Work out exactly what fields we need
+--   *
+-- FROM
+--   "coursefull"."user_courses" uc
+--   INNER JOIN "coursefull"."course" c on uc.course_id = c.id;
+

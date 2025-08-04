@@ -19,6 +19,7 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     UNIVERSITY_DATA_FILE: z.string(),
+    ANALYZE_BUNDLE: z.string().transform((val) => val === "true"),
   },
 
   /**
@@ -42,6 +43,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     CACHE_URL: process.env.CACHE_URL,
     UNIVERSITY_DATA_FILE: process.env.UNIVERSITY_DATA_FILE,
+    ANALYZE_BUNDLE: process.env.ANALYZE_BUNDLE,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -1,6 +1,6 @@
 import { isCuid } from "@paralleldrive/cuid2";
 import { TRPCError } from "@trpc/server";
-import { and, asc, eq, exists, ilike, ne } from "drizzle-orm";
+import { and, asc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, procedureFactory } from "~/server/api/trpc";
@@ -25,9 +25,11 @@ export const schoolRouter = createTRPCRouter({
       const enrolledSchools = await ctx.db
         .select()
         .from(usersInSchools)
-        .innerJoin(usersInSchools, eq(usersInSchools.schoolId, schools.id))
         .where(
-          and(eq(schools.id, input.school), eq(usersInSchools.userId, userId)),
+          and(
+            eq(usersInSchools.schoolId, input.school),
+            eq(usersInSchools.userId, userId),
+          ),
         );
 
       if (enrolledSchools.length) {
@@ -50,15 +52,14 @@ export const schoolRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+      const isEnrolledCondition = and(
+        eq(usersInSchools.userId, userId),
+        eq(usersInSchools.schoolId, input.school),
+      );
       const enrolledSchools = await ctx.db
         .select()
         .from(usersInSchools)
-        .where(
-          and(
-            eq(usersInSchools.userId, userId),
-            eq(usersInSchools.schoolId, input.school),
-          ),
-        );
+        .where(isEnrolledCondition);
 
       if (!enrolledSchools.length) {
         throw new TRPCError({
@@ -67,14 +68,7 @@ export const schoolRouter = createTRPCRouter({
         });
       }
 
-      await ctx.db
-        .delete(usersInSchools)
-        .where(
-          and(
-            eq(usersInSchools.userId, userId),
-            eq(usersInSchools.schoolId, input.school),
-          ),
-        );
+      await ctx.db.delete(usersInSchools).where(isEnrolledCondition);
     }),
 
   search: publicProcedure
@@ -100,13 +94,10 @@ export const schoolRouter = createTRPCRouter({
         )
         .orderBy(asc(schools.name))
         .$withCache();
-      const allSchools = await baseQuery;
-      const paginatedQuery = withPagination(
-        baseQuery.$dynamic(),
-        input.page,
-        input.limit,
-      );
-      const schoolPage = await paginatedQuery;
+      const [allSchools, schoolPage] = await Promise.all([
+        baseQuery,
+        withPagination(baseQuery.$dynamic(), input.page, input.limit),
+      ]);
       const pages = Math.ceil(allSchools.length / input.limit);
       const result = {
         schools: schoolPage,

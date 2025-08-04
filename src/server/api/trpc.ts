@@ -6,10 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
+import { createId } from "@paralleldrive/cuid2";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import superjson from "superjson";
-import { v4 as uuidv4 } from "uuid";
 import { ZodError } from "zod";
 
 import { asyncLocalStorage } from "~/lib/async-local-storage";
@@ -31,7 +31,7 @@ import { getLogger } from "~/server/logger";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
-  const requestId = uuidv4();
+  const requestId = createId();
 
   const logger = getLogger().withPrefix("[TRPC]");
   logger.withContext({

@@ -1,4 +1,5 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+import { and, eq, inArray, ne } from "drizzle-orm";
 import { upstashCache } from "drizzle-orm/cache/upstash";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { type PgSelect } from "drizzle-orm/pg-core";
@@ -20,7 +21,7 @@ export const db = drizzle({
   casing: "snake_case",
   cache: upstashCache({
     url: env.CACHE_URL,
-    token: "",
+    token: "LOL LMAO",
   }),
 });
 
@@ -48,6 +49,7 @@ export async function createSemester(
 ) {
   const logger = getLogger();
   await db.transaction(async (tx) => {
+    // TODO: add verification that the semester exists first
     const insertResult = await tx
       .insert(schema.semesters)
       .values(data)
@@ -55,7 +57,11 @@ export async function createSemester(
       .returning();
 
     if (!insertResult[0]) {
-      return Promise.reject("Unable to create new semester.");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "Whoops, something went wrong on our end. You might want to contact us at support@coursefull.app.",
+      });
     }
 
     const semester = insertResult[0];
@@ -83,6 +89,7 @@ export async function createCourse(
 ) {
   const logger = getLogger();
   await db.transaction(async (tx) => {
+    // TODO: add verification that the semester exists first
     const insertResult = await tx
       .insert(schema.courses)
       .values(data)
@@ -90,7 +97,11 @@ export async function createCourse(
       .returning();
 
     if (!insertResult[0]) {
-      return Promise.reject("Unable to create new course.");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "Whoops, something went wrong on our end. You might want to contact us at support@coursefull.app.",
+      });
     }
 
     const course = insertResult[0];
@@ -113,7 +124,7 @@ export async function createCourse(
 export async function createDeliverable(
   data: schema.NewDeliverable & {
     role?: schema.UserRole;
-    goal: number;
+    goal?: number;
     mark?: number;
     notes?: string;
     complete?: boolean;
@@ -121,6 +132,27 @@ export async function createDeliverable(
 ) {
   const logger = getLogger();
   await db.transaction(async (tx) => {
+    const course = await tx.query.courses.findFirst({
+      where: eq(schema.courses.id, data.courseId),
+      with: {
+        userCourses: {
+          where: and(
+            eq(schema.userCourses.userId, data.createdBy ?? ""),
+            ne(schema.userCourses.role, "student"),
+          ),
+          limit: 1,
+        },
+      },
+    });
+
+    if (!course || course.userCourses[0]?.role !== data.role) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "Whoops, something went wrong on our end. You might want to contact us at support@coursefull.app.",
+      });
+    }
+
     const insertResult = await tx
       .insert(schema.deliverables)
       .values(data)
@@ -128,15 +160,15 @@ export async function createDeliverable(
       .returning();
 
     if (!insertResult[0]) {
-      return Promise.reject("Unable to create new deliverable.");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Whoops, something went wrong on our end.",
+      });
     }
 
     const deliverable = insertResult[0];
 
-    if (
-      !!data.createdBy &&
-      (data.role === "student" || data.role === "student_owner") // Is the student role redundant since students can't create assignments
-    ) {
+    if (!!data.createdBy && data.role === "student_owner") {
       // If we have a creator that is a student, add it to their deliverables
       await tx.insert(schema.studentDeliverables).values({
         ...data,
@@ -179,11 +211,11 @@ export async function updateCourseGrades(users: string[], course: string) {
       grade: grades.grade,
       deliverableGoal,
     })
-    .from(grades)
     .where(
       and(
         eq(schema.userCourses.userId, grades.userId),
         eq(schema.userCourses.courseId, grades.course),
       ),
-    );
+    )
+    .from(grades);
 }

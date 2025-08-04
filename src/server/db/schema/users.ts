@@ -30,6 +30,8 @@ export const users = coursefullSchema.table("user", (d) => ({
     .$onUpdate(() => new Date()),
 }));
 
+// TODO: Add some models for verifying/storing academic emails, maybe?
+
 export const accounts = coursefullSchema.table(
   "account",
   (d) => ({

@@ -67,7 +67,7 @@ export function SchoolSwitcher({ schools }: SchoolSwitcherProps) {
             {schools.map((school, index) => (
               <DropdownMenuItem
                 key={school.name}
-                onClick={() => schoolStore.setActiveSchool(school.publicId)}
+                onClick={() => schoolStore.setActiveSchool(school.id)}
                 className="gap-2 p-2"
               >
                 {/* <div className="flex size-6 items-center justify-center rounded-md border"> */}

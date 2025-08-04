@@ -21,10 +21,10 @@ export const useSchoolStore = create<SchoolState>()(
         getActiveSchool: () => get().schools[get().activeSchool] ?? null,
         addSchool: (school) =>
           set((state: SchoolState) => {
-            if (!school?.publicId) {
+            if (!school?.id) {
               return state;
             }
-            state.schools[school.publicId] = school;
+            state.schools[school.id] = school;
             return state;
           }),
         setActiveSchool: (schoolId) =>

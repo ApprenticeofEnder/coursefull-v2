@@ -32,11 +32,11 @@ export const deliverableRouter = createTRPCRouter({
       .orderBy(asc(deliverables.name));
   }),
 
-  userCreate: protectedProcedure
+  createByUser: protectedProcedure
     .input(
       z.object({
         name: z.string().trim(),
-        course: z.string(),
+        courseId: z.string(),
         public: z.boolean(),
         weight: z.number().gt(0).lte(100),
         type: z.enum(deliverableType.enumValues),
@@ -45,7 +45,7 @@ export const deliverableRouter = createTRPCRouter({
         mark: z.number().gte(0).lte(100).optional(),
         complete: z.boolean().optional(),
         role: z.enum(userRole.enumValues),
-        goal: z.number().gt(0).lte(100),
+        goal: z.number().gt(0).lte(100).optional(),
         notes: z.string().optional(),
       }),
     )
@@ -54,7 +54,6 @@ export const deliverableRouter = createTRPCRouter({
 
       await createDeliverable({
         ...input,
-        courseId: input.course,
         createdBy: userId,
       });
     }),
@@ -65,7 +64,9 @@ export const deliverableRouter = createTRPCRouter({
         deliverable: z.string(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {}),
+    .mutation(async ({ ctx, input }) => {
+      return;
+    }),
 
   updateStudentDeliverable: protectedProcedure
     .input(

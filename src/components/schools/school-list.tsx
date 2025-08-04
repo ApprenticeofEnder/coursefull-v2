@@ -12,7 +12,7 @@ export function SchoolList({ schools }: { schools: School[] | undefined }) {
   return (
     <div className="flex flex-col gap-4">
       {schools.map((school) => {
-        return <SchoolCard key={school.publicId} school={school}></SchoolCard>;
+        return <SchoolCard key={school.id} school={school}></SchoolCard>;
       })}
     </div>
   );
