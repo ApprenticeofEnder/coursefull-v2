@@ -21,7 +21,6 @@ export const schoolRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
 
       // This checks if the user is already enrolled in a school
-      // The join is to make sure the school exists
       const enrolledSchools = await ctx.db
         .select()
         .from(usersInSchools)

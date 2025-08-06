@@ -44,6 +44,35 @@ export const courses = coursefullSchema.table(
   ],
 );
 
+export const courseInvites = coursefullSchema.table(
+  "course_invite",
+  (d) => ({
+    id: d
+      .text()
+      .$defaultFn(() => createId())
+      .primaryKey(),
+    courseId: d
+      .text()
+      .references(() => courses.id)
+      .notNull(),
+    validUntil: d.timestamp().notNull(),
+    createdAt: d
+      .timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    foreignKey({
+      columns: [t.courseId],
+      foreignColumns: [courses.id],
+      name: "course_invite_course_fk",
+    }),
+  ],
+);
+
 export const userCourses = coursefullSchema.table(
   "user_course",
   (d) => ({

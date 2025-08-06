@@ -49,7 +49,7 @@ export async function createSemester(
 ) {
   const logger = getLogger();
   await db.transaction(async (tx) => {
-    // TODO: add verification that the semester exists first
+    // TODO: add verification that the school exists first
     const insertResult = await tx
       .insert(schema.semesters)
       .values(data)
@@ -159,14 +159,15 @@ export async function createDeliverable(
       .onConflictDoNothing()
       .returning();
 
-    if (!insertResult[0]) {
+    // why the fuck is TypeScript
+    const deliverable = insertResult[0];
+
+    if (!deliverable) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Whoops, something went wrong on our end.",
       });
     }
-
-    const deliverable = insertResult[0];
 
     if (!!data.createdBy && data.role === "student_owner") {
       // If we have a creator that is a student, add it to their deliverables
@@ -181,12 +182,17 @@ export async function createDeliverable(
       .withMetadata({ deliverable: deliverable.id })
       .trace("Deliverable created successfully.");
   });
+
+  // Think we might need to
+
   // Last but not least, we'll update the course marks if the deliverable has a creator.
+  // TODO: Does it make more sense to just update all the course grades?
   if (data.createdBy) {
     await updateCourseGrades([data.createdBy], data.courseId);
   }
 }
 
+// TODO: Should the users array be optional?
 export async function updateCourseGrades(users: string[], course: string) {
   const grades = db.$with("grades").as(
     db

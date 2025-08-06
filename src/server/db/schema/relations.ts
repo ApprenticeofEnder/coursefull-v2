@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 
-import { courses, userCourses } from "./courses";
+import { courseInvites, courses, userCourses } from "./courses";
 import { deliverables, studentDeliverables } from "./deliverables";
 import { schools, usersInSchools } from "./schools";
 import { semesters, userSemesters } from "./semesters";
@@ -49,6 +49,14 @@ export const coursesRelations = relations(courses, ({ one, many }) => ({
   }),
   deliverables: many(deliverables),
   userCourses: many(userCourses),
+  courseInvites: many(courseInvites),
+}));
+
+export const courseInviteRelations = relations(courseInvites, ({ one }) => ({
+  course: one(courses, {
+    fields: [courseInvites.courseId],
+    references: [courses.id],
+  }),
 }));
 
 export const userCoursesRelations = relations(userCourses, ({ one }) => ({

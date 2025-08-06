@@ -36,4 +36,3 @@ FROM
 GROUP BY
   gsd.user_id,
   gsd.course;
-

@@ -105,12 +105,9 @@ export const semesterRouter = createTRPCRouter({
       z.object({
         limit: z.number().gte(10).catch(25),
         page: z.number().gte(1).catch(1),
-        school: z
-          .string()
-          .optional()
-          .refine((val) => !!val && isCuid(val)),
-        schoolName: z.string().optional(),
+        school: z.string().refine((val) => !!val && isCuid(val)),
         name: z.string().optional(),
+        // TODO: maybe add parameters for searching by start date
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -121,9 +118,6 @@ export const semesterRouter = createTRPCRouter({
         .where(
           and(
             input.school ? eq(semesters.schoolId, input.school) : undefined,
-            input.schoolName
-              ? ilike(schools.name, `%${input.schoolName}%`)
-              : undefined,
             input.name ? ilike(semesters.name, `%${input.name}%`) : undefined,
           ),
         )
@@ -140,14 +134,6 @@ export const semesterRouter = createTRPCRouter({
       };
       return result;
     }),
-
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db
-      .select()
-      .from(semesters)
-      .orderBy(asc(semesters.startsAt))
-      .$withCache();
-  }),
 
   create: protectedProcedure
     .input(
@@ -259,8 +245,27 @@ export const semesterRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return;
-    }),
+      await ctx.db.transaction(async (tx) => {
+        const userId = ctx.session.user.id;
 
-  // TODO: Add delete functionality
+        const semesterToDelete = await ctx.db.query.semesters.findFirst({
+          where: and(
+            eq(semesters.id, input.semester),
+            eq(semesters.createdBy, userId),
+          ),
+        });
+
+        if (!semesterToDelete) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Sorry, we couldn't delete that semester. Please contact the creator to request changes.",
+          });
+        }
+
+        await ctx.db
+          .delete(semesters)
+          .where(eq(semesters.id, semesterToDelete.id));
+      });
+    }),
 });
