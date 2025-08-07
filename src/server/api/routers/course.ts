@@ -9,12 +9,15 @@ import {
   courseInvites,
   courses,
   semesters,
+  userCourses,
   userRole,
+  userSemesters,
 } from "~/server/db/schema";
 
 const { publicProcedure, protectedProcedure } = procedureFactory("semesters");
 
 export const courseRouter = createTRPCRouter({
+  // Primary way of inviting people to a course is via invite links
   createInviteLink: protectedProcedure
     .input(
       z.object({
@@ -44,6 +47,10 @@ export const courseRouter = createTRPCRouter({
         await tx.insert(courseInvites).values({
           ...input,
         });
+
+        ctx.logger
+          .withMetadata({ userId, courseId: input.courseId })
+          .debug("Course invite created.");
       });
     }),
 
@@ -54,21 +61,82 @@ export const courseRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
-      const invite = await ctx.db.query.courseInvites.findFirst({
-        where: eq(courseInvites.id, input.inviteId),
+      await ctx.db.transaction(async (tx) => {
+        const userId = ctx.session.user.id;
+        const invite = await tx.query.courseInvites.findFirst({
+          where: eq(courseInvites.id, input.inviteId),
+          with: {
+            course: {
+              with: {
+                semester: {
+                  with: {
+                    userSemesters: {
+                      where: eq(userSemesters.userId, userId),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Check for both existence and expiry.
+        if (!invite || invite.validUntil < new Date()) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Sorry, that invite link is invalid.",
+          });
+        }
+
+        const goal = invite.course.semester.userSemesters[0]?.goal;
+
+        await tx
+          .insert(userCourses)
+          .values({ ...input, courseId: invite.course.id, userId, goal });
+
+        ctx.logger
+          .withMetadata({ userId, courseId: invite.course.id })
+          .debug("User accepted course invite.");
+      });
+    }),
+
+  getMemberList: protectedProcedure
+    .input(
+      z.object({
+        courseId: z.string().refine(isCuid),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userCourse = await ctx.db.query.userCourses.findFirst({
+        where: and(
+          eq(userCourses.courseId, input.courseId),
+          eq(userCourses.userId, ctx.session.user.id),
+        ),
       });
 
-      // Check for both existence and expiry.
-      if (!invite || invite.validUntil < new Date()) {
+      if (!userCourse) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Sorry, that invite link is invalid.",
+          message:
+            "Sorry, you can't see the members of this course because you're not in it. Ask the creator for an invite link!",
         });
       }
 
-      // Then add the user to the course
-      // We do need to grab the goal from the semester though
+      const members = await ctx.db.query.userCourses.findMany({
+        where: eq(userCourses.courseId, input.courseId),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+        },
+      });
+
+      return members;
     }),
 
   search: publicProcedure
@@ -83,6 +151,7 @@ export const courseRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      // Need to work out the public field
       const baseQuery = ctx.db
         .select()
         .from(courses)
@@ -110,24 +179,44 @@ export const courseRouter = createTRPCRouter({
       return result;
     }),
 
+  getCourse: protectedProcedure
+    .input(
+      z.object({
+        courseId: z.string().refine(isCuid),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const course = await ctx.db.query.courses.findFirst({
+        where: eq(courses.id, input.courseId),
+      });
+      if (!course) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      return course;
+    }),
+
   create: protectedProcedure
     .input(
       z.object({
         name: z.string(),
         shortCode: z.string(),
-        semester: z.string(),
+        semesterId: z.string(),
         public: z.boolean(),
-        role: z.enum(userRole.enumValues),
+        role: z
+          .enum(userRole.enumValues)
+          .refine(
+            (val) => val === "student_owner" || val === "faculty",
+            "You need to be a student_owner or faculty to create a course!",
+          ),
         goal: z.number().gt(0).lte(100),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
+      const createdBy = ctx.session.user.id;
 
       await createCourse({
         ...input,
-        semesterId: input.semester,
-        createdBy: userId,
+        createdBy,
       });
     }),
 
@@ -147,7 +236,7 @@ export const courseRouter = createTRPCRouter({
       });
     }),
 
-  // TODO: Update enrolment, etc.
+  // TODO: Update enrolment, leave course, etc.
 
   generateDeliverables: protectedProcedure
     .input(z.object({}))

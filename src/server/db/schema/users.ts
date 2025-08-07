@@ -3,7 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { index, primaryKey } from "drizzle-orm/pg-core";
 
-import { coursefullSchema } from "./common";
+import { coursefullSchema, userRole } from "./common";
 
 export const users = coursefullSchema.table("user", (d) => ({
   id: d
@@ -30,7 +30,29 @@ export const users = coursefullSchema.table("user", (d) => ({
     .$onUpdate(() => new Date()),
 }));
 
-// TODO: Add some models for verifying/storing academic emails, maybe?
+export const academicEmails = coursefullSchema.table(
+  "academic_email",
+  (d) => ({
+    userId: d
+      .text()
+      .references(() => users.id)
+      .notNull(),
+    role: userRole().notNull(),
+    email: d.varchar({ length: 255 }).notNull(),
+    verifiedAt: d.timestamp({ withTimezone: true }),
+    createdAt: d
+      .timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d
+      .timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    primaryKey({ columns: [t.userId, t.email] }),
+    index("academic_email_user_id_idx").on(t.userId),
+  ],
+);
 
 export const accounts = coursefullSchema.table(
   "account",
